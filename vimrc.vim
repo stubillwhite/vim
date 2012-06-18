@@ -1,26 +1,8 @@
 " TODO: 
+"  - Look at repeat.vim
+"  - Better XML completion
 "  - Sort out :compiler option
-"  - Sort out returning of Python variables
-"  - CTRL-M to toggle make errors
-"  - CTRL-P to toggle preview
-"  - Local diff, rather than external
-"  - Python config should include whitespace sensitivity
-"  - Search should allow regular expressions
-"  - Modify quickfix; when autocommand executes (au BufReadPost quickfix)  execute :cw
-"  - Sort out variables for scripts so that keybindings are configurable
-
-" FILE: vimrc.vim
-"
-" DESCRIPTION: 
-" Master Vimrc file. This performs setup which is common to all configurations.
-"
-" The following commands are provided:
-"       EditorConfigCode    Code editing mode
-"       EditorConfigText    Text editing mode
-"       Maximise            Maximise the window
-"
-" REQUIRES: 
-"       Nothing
+"  - Sort out fuzzy finder and tag building for project files only
 
 " =================================================================================================== 
 " Vundle
@@ -31,8 +13,6 @@ filetype off
 
 set runtimepath+=~/.vim/bundle/vundle/
 call vundle#rc()
-
-" TODO: look at repeat.vim
 
 " =================================================
 " Bundles
@@ -67,9 +47,6 @@ Bundle 'FuzzyFinder'
 
 " Align data in columns
 Bundle 'Align'
-
-" Easy closing of tags via CTRL+_
-Bundle 'closetag.vim'
 
 " Enable filetype autodetection and indent
 filetype plugin indent on
@@ -154,7 +131,6 @@ function MyMakeTags()
     \   'ProjectCommon.xml', 
     \   'StandardProject.xml', 
     \   'StandardProperties.xml', 
-    \   'filesystem_utils.xml', 
     \   'WebServiceProject.xml']
 
     let cmd = '!ctags.exe --language-force=customant '
