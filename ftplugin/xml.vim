@@ -7,7 +7,11 @@ endif
 silent execute ':EditorConfigCode'
 
 " Treat [@_-.:] as part of an identifier, not as punctuation
-set iskeyword=@,48-57,_,192-255,-,.,:
+set iskeyword+=@
+set iskeyword+=_
+set iskeyword+=-
+set iskeyword+=.
+set iskeyword+=:
 
 function s:FormatXml() range
     " TODO: Should use something better than $my_home, like a variable defined in here
