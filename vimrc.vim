@@ -311,4 +311,5 @@ endif
 " =================================================================================================== 
 
 nnoremap <Leader>u :GundoToggle<CR>
-nnoremap <Leader>d :silent! !start accurev diff <c-R>%<CR>
+nnoremap <Leader>d :silent! !start accurev diff -b <c-R>%<CR>
+
