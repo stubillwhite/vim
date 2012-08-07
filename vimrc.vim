@@ -48,6 +48,13 @@ Bundle 'FuzzyFinder'
 " Align data in columns
 Bundle 'Align'
 
+" Tag autocompletion
+" Bundle 'closetag.vim'
+Bundle 'vim-orgmode'
+Bundle 'mediawiki'
+
+" Bundle 'accurev'
+
 " Enable filetype autodetection and indent
 filetype plugin indent on
 
@@ -149,22 +156,23 @@ command -nargs=0 MyMakeTags call MyMakeTags()
 
 function MakeTags()
     let buildFiles = [
-    \   'build.xml', 
-    \   'database-build-scripts.xml', 
-    \   'common-build-utils.xml', 
-    \   'webui-build-utils.xml', 
-    \   'deployment-utils.xml', 
-    \   'ComponentCommon.xml', 
-    \   'generic_build_targets.xml', 
-    \   'JUnitReport_build_targets.xml', 
-    \   'filesystem_utils.xml', 
-    \   'accurev_ignore_targets.xml', 
-    \   'ProjectBuild.xml', 
-    \   'apollo-tomcat-deployment.xml', 
-    \   'apollo-tomcat-deployment-internal.xml', 
-    \   'apollo-jboss-deployment.xml', 
+    \   'accurev_ignore_targets.xml',
+    \   'apollo-examples.xml',
     \   'apollo-jboss-deployment-internal.xml',
-    \   'apollo-examples.xml']
+    \   'apollo-jboss-deployment.xml',
+    \   'apollo-tomcat-deployment-internal.xml',
+    \   'apollo-tomcat-deployment.xml',
+    \   'build.xml',
+    \   'common-build-utils.xml',
+    \   'ComponentCommon.xml',
+    \   'database-build-scripts.xml',
+    \   'deployment-utils.xml',
+    \   'filesystem_utils.xml',
+    \   'generic_build_targets.xml',
+    \   'JUnitReport_build_targets.xml',
+    \   'ProjectBuild.xml',
+    \   'was-config-utils.xml',
+    \   'webui-build-utils.xml']
 
     let cmd = '!ctags.exe --language-force=ant *.xml '
 
@@ -187,15 +195,12 @@ command -nargs=0 MakeTags call MakeTags()
 " Paths
 if has('unix')
     let g:Home='~'
-    let g:VimScriptDir=g:Home.'/srcs/vi'
-    let g:TmpDir=g:Home.'/.vimtmp' 
     set guifont=Monospace\ 10
 else
     let g:Home='c:/users/IBM_ADMIN/my_local_stuff/home'
-    let g:VimScriptDir=g:Home.'/my_stuff/srcs/vi'
-    let g:TmpDir=g:Home.'/_vimtmp'
     set guifont=Lucida_Console:h10:cANSI
 endif
+let g:TmpDir=g:Home.'/.vimtmp'
 
 " Default to Vim mode, and Windows behaviour
 set nocompatible
@@ -313,3 +318,5 @@ endif
 nnoremap <Leader>u :GundoToggle<CR>
 nnoremap <Leader>d :silent! !start accurev diff -b <c-R>%<CR>
 
+" Visual ,fR reverses highlighted text
+vmap <Leader>fR c<C-O>:set ri<CR><C-R>"<Esc>:set nori<CR>

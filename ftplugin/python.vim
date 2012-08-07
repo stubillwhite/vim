@@ -4,6 +4,8 @@ else
     let s:Sourced=1
 endif
 
+silent execute ':EditorConfigCode'
+
 "------------------------------------------------------------------------------
 " Google's indentation, taken from
 " http://google-styleguide.googlecode.com/svn/trunk/google_python_style.vim

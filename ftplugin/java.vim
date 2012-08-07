@@ -4,6 +4,8 @@ else
     let s:Sourced=1
 endif
 
+silent execute ':EditorConfigCode'
+
 " Highlighting options
 let java_highlight_functions="style"    " Identify functions by naming style
 let java_allow_cpp_keywords=1           " No CPP code compatability
