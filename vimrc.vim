@@ -126,83 +126,6 @@ function GenerateGUIDs(count)
 endfunction
 command -nargs=+ GenerateGUIDs call GenerateGUIDs(<f-args>)
 
-" =================================================
-" Tags functions
-" =================================================
-
-function MyMakeTags()
-    let buildFiles = [
-    \   'build.xml', 
-    \   'DependencyTargets.xml', 
-    \   'GenericTargets.xml', 
-    \   'ProjectCommon.xml', 
-    \   'StandardProject.xml', 
-    \   'StandardProperties.xml', 
-    \   'WebServiceProject.xml']
-
-    let cmd = '!ctags.exe --language-force=customant '
-
-    echo 'Finding build files...'
-    for fnam in buildFiles
-        for filePath in findfile(fnam, '../../../CommonComponents/JavaBuildScripts/**5,**5', -1)
-            echo '  '.filePath
-            let cmd = cmd.'"'.filePath.'" '
-        endfor
-    endfor
-    echo 'Building tags...'
-    silent execute cmd
-endfunction
-command -nargs=0 MyMakeTags call MyMakeTags()
-
-function MakeTags()
-    let buildFiles = [
-    \   'accurev_ignore_targets.xml',
-    \   'apollo-examples.xml',
-    \   'apollo-jboss-deployment-internal.xml',
-    \   'apollo-jboss-deployment.xml',
-    \   'apollo-tomcat-deployment-internal.xml',
-    \   'apollo-tomcat-deployment.xml',
-    \   'build.xml',
-    \   'common-build-utils.xml',
-    \   'ComponentCommon.xml',
-    \   'database-build-scripts.xml',
-    \   'deployment-utils.xml',
-    \   'filesystem_utils.xml',
-    \   'generic_build_targets.xml',
-    \   'JUnitReport_build_targets.xml',
-    \   'ProjectBuild.xml',
-    \   'webui-build-utils.xml',
-    \   'configure-was-read-side.xml',
-    \   'deploy-read-side-application.xml',
-    \   'manage-read-server.xml',
-    \   'pack-read-side-ear.xml',
-    \   'unpack-read-side-ear.xml',
-    \   'configure-was-web-help.xml',
-    \   'deploy-web-help.xml',
-    \   'manage-help-server.xml',
-    \   'repackage-web-help.xml',
-    \   'configure-was-write-side.xml',
-    \   'deploy-write-side-application.xml',
-    \   'manage-write-server.xml',
-    \   'pack-write-side-ear.xml',
-    \   'unpack-write-side-ear.xml',
-    \   'ear-manipulation.xml',
-    \   'was-config-utils.xml']
-
-    let cmd = '!ctags.exe --language-force=ant *.xml '
-
-    echo 'Finding build files...'
-    for fnam in buildFiles
-        for filePath in findfile(fnam, '../Fetched/i2Components/**5,**7', -1)
-            echo '  '.filePath
-            let cmd = cmd.'"'.filePath.'" '
-        endfor
-    endfor
-    echo 'Building tags...'
-    silent execute cmd
-endfunction
-command -nargs=0 MakeTags call MakeTags()
-
 " =================================================================================================== 
 " Settings
 " =================================================================================================== 
@@ -325,6 +248,12 @@ autocmd GUIEnter * call ConfigureGui()
 if !has('unix')
     set fileformats-=unix
 endif
+
+" =================================================================================================== 
+" Other scripts
+" =================================================================================================== 
+
+silent execute 'source '.g:Home.'/my_stuff/srcs/vim/make-tags.vim'
 
 " =================================================================================================== 
 " Key-mappings
