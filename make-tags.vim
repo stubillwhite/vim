@@ -9,7 +9,7 @@ def matches(s, patterns):
             return True
     return False
 
-def find(root='.', inc_dirs=['.*'], exc_dirs=[], inc_files=['.*'], exc_files=[], depth=3):
+def find(root='.', inc_dirs=['.*'], exc_dirs=[], inc_files=['.*'], exc_files=[], depth=5):
 
     inc_dirs_patterns  = [re.compile(r, re.IGNORECASE) for r in inc_dirs]
     exc_dirs_patterns  = [re.compile(r, re.IGNORECASE) for r in exc_dirs]
@@ -34,7 +34,13 @@ def find(root='.', inc_dirs=['.*'], exc_dirs=[], inc_files=['.*'], exc_files=[],
     return matching_files
 
 INCLUDE_DIRS = [
-    r'Fetched\\i2Components\\Java Shared Build Scripts']
+    r'dependencies\\ApolloConfiguration\\Servers\\WebSphere\\gar\\wsadmin',
+    r'dependencies\\ApolloConfiguration\\Servers\\WebSphere\\gar\\read-side',
+    r'dependencies\\ApolloConfiguration\\Servers\\WebSphere\\gar\\write-side',
+    r'dependencies\\ApolloConfiguration\\Servers\\WebSphere\\gar\\webapp',
+    r'dependencies\\ApolloConfiguration\\Servers\\WebSphere\\gar\\webhelp',
+    r'Fetched\\i2Components\\Java Shared Build Scripts'
+    ]
 INCLUDE_FILES = [
     r'build.xml',
     r'common-build-utils.xml',
@@ -43,7 +49,10 @@ INCLUDE_FILES = [
     r'deployment-utils.xml',
     r'filesystem_utils.xml',
     r'Fetched\\i2Components\\Java Shared Build Scripts\\.*\.xml',
-    r'dependencies\\ApolloTomcatDeployment\\apollo-tomcat-deployment-.*\.xml']
+    r'dependencies\\ApolloTomcatDeployment\\apollo-tomcat-deployment.*\.xml',
+    r'dependencies\\ApolloExamples\\ant\\.*\.xml',
+    r'dependencies\\ApolloConfiguration\\Servers\\WebSphere\\gar\\.*\\.*\.xml'
+    ]
 EXCLUDE_DIRS = [
     r'bin',
     r'bld',
@@ -73,9 +82,9 @@ python << EOF
 print 'Finding files...'
 root = os.path.join(os.getcwd(), '..')
 inc_dirs = INCLUDE_DIRS + [re.escape(os.getcwd())]
-files = find(root=root, inc_dirs=inc_dirs, exc_dirs=EXCLUDE_DIRS, inc_files=INCLUDE_FILES, exc_files=EXCLUDE_FILES, depth=3)
+files = find(root=root, inc_dirs=inc_dirs, exc_dirs=EXCLUDE_DIRS, inc_files=INCLUDE_FILES, exc_files=EXCLUDE_FILES, depth=7)
 cmd = 'ctags.exe --language-force=ant ' + ' '.join(['"%s"' % f for f in files])
-print cmd
+print 'Building tags...'
 getCmdOutput(cmd)
 EOF
 endfunction
