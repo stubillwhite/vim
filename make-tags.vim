@@ -47,6 +47,7 @@ INCLUDE_FILES = [
     r'ComponentCommon.xml',
     r'database-build-scripts.xml',
     r'deployment-utils.xml',
+    r'WebSphereUtils.xml',
     r'filesystem_utils.xml',
     r'Fetched\\i2Components\\Java Shared Build Scripts\\.*\.xml',
     r'dependencies\\ApolloTomcatDeployment\\apollo-tomcat-deployment.*\.xml',
