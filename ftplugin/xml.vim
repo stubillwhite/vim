@@ -19,5 +19,5 @@ function s:FormatXml() range
 endfunction
 command! -range=% -nargs=0 FormatXml <line1>,<line2>call s:FormatXml(<f-args>)
 
-vmap <Leader>f :FormatXml<CR>
-nmap <Leader>f :FormatXml<CR>
+vnoremap <Leader>f :FormatXml<CR>
+nnoremap <Leader>f :FormatXml<CR>
