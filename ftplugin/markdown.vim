@@ -23,7 +23,7 @@ def close(fnam):
     uri = getUri(fnam)
     cmd = ''' 
             ;
-            if (switchToTabHavingURI("file:///C:/Users/IBM_ADMIN/my_local_stuff/home/test.mkd.html")) { 
+            if (switchToTabHavingURI("%(uri)s")) { 
                 gBrowser.removeCurrentTab();
             };
             repl.quit();
@@ -49,20 +49,20 @@ def preview(fnam):
     executeCmd(cmd % { 'uri' : uri})
 EOF
 
-function! s:GenerateHtml()
-    let fnam = expand('%:p')
-    silent! execute '!'.g:MarkdownPath.' '.fnam.' > '.fnam.'.html'
-    return fnam.'.html'
+function! s:GenerateHtml(fnam)
+    silent! execute '!'.g:MarkdownPath.' '.a:fnam.' > '.a:fnam.'.html'
+    return a:fnam.'.html'
 endfunction
 
-function! s:MarkdownPreview()
-    let fnam = s:GenerateHtml()
-    execute ':py preview(r"'.fnam.'")'
+function! s:MarkdownPreview(fnam)
+    let htmlFnam = s:GenerateHtml(a:fnam)
+    execute ':py preview(r"'.htmlFnam.'")'
 endfunction
 
 function! s:MarkdownPreviewClose(fnam)
     echo "Closing preview."
-    execute ':py close(r"'.a:fnam.'")'
+    let htmlFnam = s:GenerateHtml(a:fnam)
+    execute ':py close(r"'.htmlFnam.'")'
 endfunction
 
 function! s:TogglePreview()
@@ -82,8 +82,11 @@ command! -nargs=0 TogglePreview call s:TogglePreview()
 function! s:EnablePreviewOnSave()
     echo "Preview on save enabled."
     augroup MarkdownPreviewOnSave
-        autocmd BufWritePost *.mkd :call s:MarkdownPreview()
-        autocmd BufDelete *.mkd :call s:MarkdownPreviewClose('<afile>')
+        autocmd BufEnter     *.mkd :call s:MarkdownPreview(expand('%:p'))
+        autocmd BufWritePost *.mkd :call s:MarkdownPreview(expand('%:p'))
+        autocmd BufDelete    *.mkd :call s:MarkdownPreviewClose(expand('<afile>:p'))
+        autocmd BufWipeout   *.mkd :call s:MarkdownPreviewClose(expand('<afile>:p'))
+        autocmd VimLeave     *.mkd :call s:MarkdownPreviewClose(expand('%:p'))
     augroup end
 endfunction
 
