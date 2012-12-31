@@ -20,6 +20,7 @@ hi Statement    guifg=CadetBlue2        guibg=bg                gui=NONE
 hi PreProc      guifg=Pink2             guibg=bg                gui=NONE
 hi Type         guifg=CadetBlue2        guibg=bg                gui=NONE
 hi Special      guifg=burlywood1        guibg=bg                gui=NONE
+hi MatchParen   guifg=white             guibg=darkslategray     gui=bold
 "hi Underlined
 "hi Ignore
 "hi Error

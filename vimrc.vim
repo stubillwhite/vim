@@ -1,12 +1,15 @@
-" TODO: 
+" vim:fdm=marker
+
+" Stuff to sort out                                                         {{{1
+" ==============================================================================
+
 "  - Look at repeat.vim
 "  - Better XML completion
 "  - Sort out :compiler option
 "  - Sort out fuzzy finder and tag building for project files only
 
-" =================================================================================================== 
-" Vundle
-" =================================================================================================== 
+" Vundle                                                                    {{{1
+" ==============================================================================
 
 set nocompatible 
 filetype off     
@@ -14,9 +17,8 @@ filetype off
 set runtimepath+=~/.vim/bundle/vundle/
 call vundle#rc()
 
-" =================================================
-" Bundles
-" ================================================= 
+" Bundles                           {{{2
+" ======================================
 
 " Vundle (required)
 Bundle 'gmarik/vundle'
@@ -50,17 +52,21 @@ Bundle 'Align'
 
 " Tag autocompletion
 " Bundle 'closetag.vim'
+" Bundle 'HTML-AutoCloseTag'
+Bundle 'xml.vim'
+
+" Experimental
 Bundle 'vim-orgmode'
 Bundle 'mediawiki'
+
 
 " Bundle 'accurev'
 
 " Enable filetype autodetection and indent
 filetype plugin indent on
 
-" =================================================================================================== 
-" Functions
-" =================================================================================================== 
+" Functions                                                                 {{{1
+" ==============================================================================
 
 function EditorConfigCode()
     set textwidth=0
@@ -70,12 +76,28 @@ function EditorConfigCode()
 endfunction
 command -nargs=0 EditorConfigCode call EditorConfigCode()
 
+function EditorConfigExtended()
+    "TODO - Build into standard configuration
+    set encoding=utf-8
+    set fileencoding=utf-8
+    set fileencodings=ucs-bom,utf8,prc
+    set guifont=Lucida_Console:h10:cDEFAULT
+    set guifontwide=NSimsun:h10
+endfunction
+command -nargs=0 EditorConfigExtended call EditorConfigExtended()
+
 function EditorConfigText()
     set textwidth=80
     set autoindent
     set smarttab
 endfunction
 command -nargs=0 EditorConfigText call EditorConfigText()
+
+function TabStop(n)
+    execute 'set tabstop='.a:n
+    execute 'set shiftwidth='.a:n
+endfunction
+command -nargs=1 TabStop call TabStop(<f-args>)
 
 function MaximiseWindow()
     if has('unix')
@@ -98,9 +120,8 @@ function NoDiffThis()
 endfunction
 command -nargs=0 NoDiffThis call NoDiffThis(<f-args>)
 
-" =================================================
-" Text functions
-" =================================================
+" Text functions                    {{{2
+" ======================================
 
 " Underline the current text
 function Underline(char)
@@ -126,9 +147,8 @@ function GenerateGUIDs(count)
 endfunction
 command -nargs=+ GenerateGUIDs call GenerateGUIDs(<f-args>)
 
-" =================================================================================================== 
-" Settings
-" =================================================================================================== 
+" Settings                                                                  {{{1
+" ==============================================================================
 
 " Paths
 if has('unix')
@@ -136,7 +156,7 @@ if has('unix')
     set guifont=Monospace\ 10
 else
     let g:Home='c:/users/IBM_ADMIN/my_local_stuff/home'
-    set guifont=Lucida_Console:h10:cANSI
+    set guifont=Lucida_Console:h10:cDEFAULT
 endif
 let g:TmpDir=g:Home.'/.vimtmp'
 
@@ -154,17 +174,16 @@ set hlsearch                    " Highlight search matches
 set history=1000                " Keep more history
 set visualbell                  " Don't beep, just flash
 set expandtab                   " No tabs
-set tabstop=4                   " Tab size
-set shiftwidth=4                " Indent size
 set nowrap                      " Don't wrap text when displaying
 set nojoinspaces                " Single-space when joining sentences
 set ignorecase                  " Case insensitive by default
 set scrolloff=2                 " Keep some context when scrolling vertically
 set sidescrolloff=2             " Keep some context when scrolling horizontally
-set timeoutlen=1000             " Timeout to press a key combination
+set timeoutlen=2000             " Timeout to press a key combination
 set undofile                    " Allow undo history to persist between sessions
 syntax on                       " Syntax highlighting
 colorscheme white               " My color scheme
+TabStop 4                       " Default to 4 spaces per tabstop
 
 " Command / file completion
 set wildmenu                    " Display options when tab completing
@@ -184,7 +203,7 @@ set guioptions-=b               " No bottom scrollbar
 " Misc options
 let g:netrw_altv=1              " Netrw vertical split puts cursor on the right
 let html_use_css=1              " TOhtml command should use CSS
-let mapleader = ","             " Set <Leader> to something easier to reach
+let mapleader=","               " Set <Leader> to something easier to reach
 
 " Swap ` and ' because ` functionality is more useful but the key is hard to reach
 nnoremap ' `
@@ -249,15 +268,13 @@ if !has('unix')
     set fileformats-=unix
 endif
 
-" =================================================================================================== 
-" Other scripts
-" =================================================================================================== 
+" Other scripts                                                             {{{1
+" ==============================================================================
 
 silent execute 'source '.g:Home.'/my_stuff/srcs/vim/make-tags.vim'
 
-" =================================================================================================== 
-" Key-mappings
-" =================================================================================================== 
+" Key mappings                                                              {{{1
+" ==============================================================================
 
 nnoremap <Leader>u :GundoToggle<CR>
 nnoremap <Leader>d :silent! !start accurev diff -b <c-R>%<CR>
