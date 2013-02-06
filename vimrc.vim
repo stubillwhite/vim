@@ -147,6 +147,23 @@ function GenerateGUIDs(count)
 endfunction
 command -nargs=+ GenerateGUIDs call GenerateGUIDs(<f-args>)
 
+" While I'm playing with fonts...
+"
+function FontLucida()
+    silent execute 'set guifont=Lucida_Console:h10:cDEFAULT'
+endfunction
+command -nargs=* FontLucida call FontLucida(<f-args>)
+
+function FontInconsolata()
+    silent execute 'set guifont=Inconsolata:h12:cANSI'
+endfunction
+command -nargs=* FontInconsolata call FontInconsolata(<f-args>)
+
+function FontAnonymous()
+    silent execute 'set guifont=Anonymous_Pro:h12:cANSI'
+endfunction
+command -nargs=* FontAnonymous call FontAnonymous(<f-args>)
+
 " Settings                                                                  {{{1
 " ==============================================================================
 
@@ -156,7 +173,11 @@ if has('unix')
     set guifont=Monospace\ 10
 else
     let g:Home='c:/users/IBM_ADMIN/my_local_stuff/home'
+    set encoding=utf-8
+    set fileencoding=utf-8
+    set fileencodings=ucs-bom,utf8,prc
     set guifont=Lucida_Console:h10:cDEFAULT
+    set guifontwide=NSimsun:h10
 endif
 let g:TmpDir=g:Home.'/.vimtmp'
 
