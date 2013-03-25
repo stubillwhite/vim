@@ -6,6 +6,8 @@ endif
 
 silent execute ':EditorConfigCode'
 
+let g:SrchPattern='*.py'
+
 "------------------------------------------------------------------------------
 " Google's indentation, taken from
 " http://google-styleguide.googlecode.com/svn/trunk/google_python_style.vim

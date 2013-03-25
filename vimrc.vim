@@ -7,6 +7,7 @@
 "  - Better XML completion
 "  - Sort out :compiler option
 "  - Sort out fuzzy finder and tag building for project files only
+"  - Better search functionality
 
 " Vundle                                                                    {{{1
 " ==============================================================================
@@ -58,9 +59,7 @@ Bundle 'xml.vim'
 " Experimental
 Bundle 'vim-orgmode'
 Bundle 'mediawiki'
-
-
-" Bundle 'accurev'
+Bundle 'Solarized'
 
 " Enable filetype autodetection and indent
 filetype plugin indent on
@@ -75,16 +74,6 @@ function EditorConfigCode()
     silent execute ':Maximise'
 endfunction
 command -nargs=0 EditorConfigCode call EditorConfigCode()
-
-function EditorConfigExtended()
-    "TODO - Build into standard configuration
-    set encoding=utf-8
-    set fileencoding=utf-8
-    set fileencodings=ucs-bom,utf8,prc
-    set guifont=Lucida_Console:h10:cDEFAULT
-    set guifontwide=NSimsun:h10
-endfunction
-command -nargs=0 EditorConfigExtended call EditorConfigExtended()
 
 function EditorConfigText()
     set textwidth=80
@@ -135,6 +124,7 @@ command -nargs=1 Underline call Underline(<f-args>)
 function FixSmartPunctuation()
     silent! %s/\%u0091/'/g
     silent! %s/\%u0092/'/g
+    silent! %s/\%u2019/'/g
     silent! %s/\%u0093/"/g
     silent! %s/\%u0094/"/g
 endfunction
@@ -170,14 +160,8 @@ command -nargs=* FontAnonymous call FontAnonymous(<f-args>)
 " Paths
 if has('unix')
     let g:Home='~'
-    set guifont=Monospace\ 10
 else
     let g:Home='c:/users/IBM_ADMIN/my_local_stuff/home'
-    set encoding=utf-8
-    set fileencoding=utf-8
-    set fileencodings=ucs-bom,utf8,prc
-    set guifont=Lucida_Console:h10:cDEFAULT
-    set guifontwide=NSimsun:h10
 endif
 let g:TmpDir=g:Home.'/.vimtmp'
 
@@ -205,6 +189,13 @@ set undofile                    " Allow undo history to persist between sessions
 syntax on                       " Syntax highlighting
 colorscheme white               " My color scheme
 TabStop 4                       " Default to 4 spaces per tabstop
+
+" Enable extended character sets
+set encoding=utf-8
+set fileencoding=utf-8
+set fileencodings=ucs-bom,utf8,prc
+set guifont=Lucida_Console:h10:cDEFAULT
+set guifontwide=NSimsun:h10
 
 " Command / file completion
 set wildmenu                    " Display options when tab completing
@@ -289,6 +280,20 @@ if !has('unix')
     set fileformats-=unix
 endif
 
+" Search                                                                    {{{1
+" ==============================================================================
+
+set grepprg=findstr\ /s\ /n
+set grepformat=%f:%l:%m
+let g:SrchPattern='*.txt'
+
+function s:SearchForWord(wrd)
+    let g:SrchPattern=input('Pattern: ', g:SrchPattern)
+    let cmd=':grep '.a:wrd.' '.g:SrchPattern
+    silent execute cmd
+endfunction
+command -nargs=1 Search call s:SearchForWord(<f-args>)
+
 " Other scripts                                                             {{{1
 " ==============================================================================
 
@@ -299,6 +304,4 @@ silent execute 'source '.g:Home.'/my_stuff/srcs/vim/make-tags.vim'
 
 nnoremap <Leader>u :GundoToggle<CR>
 nnoremap <Leader>d :silent! !start accurev diff -b <c-R>%<CR>
-
-" Visual ,fR reverses highlighted text
-vmap <Leader>fR c<C-O>:set ri<CR><C-R>"<Esc>:set nori<CR>
+nnoremap <C-K> :Search <C-R><C-W>
