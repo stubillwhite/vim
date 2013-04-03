@@ -19,3 +19,8 @@ let g:slimv_lisp = 'java -cp c:/dev/MyProjects/Clojure/clojure-1.3.0/clojure-1.3
 "let g:slimv_lisp = 'java -cp c:/dev/MyProjects/Clojure/clojure-1.3.0/clojure-1.3.0.jar;C:/Users/IBM_ADMIN/.vim/bundle/slimv.vim/swank-clojure clojure.main'
 
 let g:slimv_lisp = '' " use lein swank
+
+" <leader>e evaluate
+" <leader>r repl
+" nnoremap <Leader>e normal cqq<CR>
+" nnoremap <Leader>r normal cqp<CR>

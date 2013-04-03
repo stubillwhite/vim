@@ -27,9 +27,6 @@ Bundle 'gmarik/vundle'
 " Utility functions used by oher plugins (required)
 Bundle 'L9'           
 
-" EMACS Slimv for Lisp editing
-Bundle 'slimv.vim'    
-
 " SQL language
 Bundle 'sqlserver.vim'
 
@@ -38,9 +35,6 @@ Bundle 'The-NERD-Commenter'
 
 " Adds surround text block
 Bundle 'surround.vim'
-
-" Adds CamelCase text blocks
-Bundle 'camelcasemotion'
 
 " Visualise the undo graph
 Bundle 'Gundo'
@@ -59,7 +53,19 @@ Bundle 'xml.vim'
 " Experimental
 Bundle 'vim-orgmode'
 Bundle 'mediawiki'
-Bundle 'Solarized'
+
+"" " Clojure
+"" Bundle 'tpope/vim-fireplace'
+"" "Bundle 'tpope/vim-classpath'
+"" Bundle 'guns/vim-clojure-static'
+"" " EMACS Slimv for Lisp editing
+"" Bundle 'paredit.vim'
+
+""
+" Old Clojure
+Bundle 'slimv.vim'    
+"Bundle 'VimClojure'    
+
 
 " Enable filetype autodetection and indent
 filetype plugin indent on
@@ -124,9 +130,10 @@ command -nargs=1 Underline call Underline(<f-args>)
 function FixSmartPunctuation()
     silent! %s/\%u0091/'/g
     silent! %s/\%u0092/'/g
-    silent! %s/\%u2019/'/g
     silent! %s/\%u0093/"/g
     silent! %s/\%u0094/"/g
+    silent! %s/\%u2019/'/g
+    silent! %s/\%u2026/.../g
 endfunction
 command -nargs=0 FixSmartPunctuation call FixSmartPunctuation(<f-args>)
 
