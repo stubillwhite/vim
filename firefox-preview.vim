@@ -122,6 +122,7 @@ function! s:FirefoxPreviewClose(fnam)
     if exists ('g:PreviewFileTypes') && &ft =~ g:PreviewFileTypes
         echo "Closing preview."
         execute ':py close(r"'.a:fnam.'")'
+    endif
     return
 endfunction
 
