@@ -171,6 +171,7 @@ else
     let g:Home='c:/users/IBM_ADMIN/my_local_stuff/home'
 endif
 let g:TmpDir=g:Home.'/.vimtmp'
+let g:MyVimScripts=g:Home.'/my_stuff/srcs/vim'
 
 " Default to Vim mode, and Windows behaviour
 set nocompatible
@@ -304,7 +305,7 @@ command -nargs=1 Search call s:SearchForWord(<f-args>)
 " Other scripts                                                             {{{1
 " ==============================================================================
 
-silent execute 'source '.g:Home.'/my_stuff/srcs/vim/make-tags.vim'
+silent execute 'source '.g:MyVimScripts.'/make-tags.vim'
 
 " Key mappings                                                              {{{1
 " ==============================================================================
