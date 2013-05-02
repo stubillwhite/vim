@@ -306,6 +306,7 @@ command -nargs=1 Search call s:SearchForWord(<f-args>)
 " ==============================================================================
 
 silent execute 'source '.g:MyVimScripts.'/make-tags.vim'
+set tags=./tags,../tags,tags
 
 " Key mappings                                                              {{{1
 " ==============================================================================

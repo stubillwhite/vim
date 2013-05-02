@@ -10,5 +10,4 @@ augroup filetypedetect
   au! BufRead,BufNewFile *.json         setfiletype javascript
   au! BufRead,BufNewFile *.ccsbmuproj   setfiletype xml
   au! BufRead,BufNewFile *.xml.template setfiletype xml
-  au! BufRead,BufNewFile *.md           setfiletype markdown
 augroup END

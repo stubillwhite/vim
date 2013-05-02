@@ -6,4 +6,4 @@ endif
 
 silent execute 'source '.g:MyVimScripts.'/firefox-preview.vim'
 
-nnoremap <Leader>pr :TogglePreview html<CR>
+map <buffer> <Leader>pr :FirefoxPreviewTogglePreview html<CR>

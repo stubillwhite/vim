@@ -9,7 +9,6 @@ import os
 import subprocess
 import telnetlib
 import urllib
-import vim
 
 def executeCmd(cmd):
     repl = telnetlib.Telnet('localhost', 4242)
@@ -112,48 +111,54 @@ def executeShellCmd(cmd, dir=None):
     return output
 EOF
 
-function! s:FirefoxPreview(fnam)
+function! FirefoxPreview(fnam)
     if exists ('g:PreviewFileTypes') && &ft =~ g:PreviewFileTypes
         execute ':py preview(r"'.a:fnam.'")'
     endif
 endfunction
+command! -nargs=1 FirefoxPreview call FirefoxPreview(<f-args>)
 
-function! s:FirefoxPreviewClose(fnam)
+function! FirefoxPreviewClose(fnam)
     if exists ('g:PreviewFileTypes') && &ft =~ g:PreviewFileTypes
         echo "Closing preview."
         execute ':py close(r"'.a:fnam.'")'
     endif
     return
 endfunction
+command! -nargs=1 FirefoxPreviewClose call FirefoxPreviewClose(<f-args>)
 
-function! s:TogglePreview(filetypes)
+function! FirefoxPreviewCreateFunctions()
+    execute ':py createFunctions()'
+endfunction
+
+function! FirefoxPreviewTogglePreview(filetypes)
     if !exists('s:PreviewEnabled')
         let s:PreviewEnabled=0
     endif
     if s:PreviewEnabled
         let s:PreviewEnabled=0
-        call s:DisablePreviewOnSave()
+        call FirefoxPreviewDisablePreviewOnSave()
     else
         let s:PreviewEnabled=1
-        call s:EnablePreviewOnSave(a:filetypes)
-        execute ':py createFunctions()'
+        call FirefoxPreviewEnablePreviewOnSave(a:filetypes)
+        call FirefoxPreviewCreateFunctions()
     endif
 endfunction
-command! -nargs=1 TogglePreview call s:TogglePreview(<f-args>)
+command! -nargs=1 FirefoxPreviewTogglePreview call FirefoxPreviewTogglePreview(<f-args>)
 
-function! s:EnablePreviewOnSave(filetypes)
+function! FirefoxPreviewEnablePreviewOnSave(filetypes)
     echo "Preview on save enabled."
     let g:PreviewFileTypes=a:filetypes
     augroup FirefoxPreviewOnSave
-        autocmd BufEnter     * :call s:FirefoxPreview(expand('%:p'))
-        autocmd BufWritePost * :call s:FirefoxPreview(expand('%:p'))
-        autocmd BufDelete    * :call s:FirefoxPreviewClose(expand('<afile>:p'))
-        autocmd BufWipeout   * :call s:FirefoxPreviewClose(expand('<afile>:p'))
-        autocmd VimLeave     * :call s:FirefoxPreviewClose(expand('%:p'))
+        autocmd BufEnter     * :call FirefoxPreview(expand('%:p'))
+        autocmd BufWritePost * :call FirefoxPreview(expand('%:p'))
+        autocmd BufDelete    * :call FirefoxPreviewClose(expand('<afile>:p'))
+        autocmd BufWipeout   * :call FirefoxPreviewClose(expand('<afile>:p'))
+        autocmd VimLeave     * :call FirefoxPreviewClose(expand('%:p'))
     augroup end
 endfunction
 
-function! s:DisablePreviewOnSave()
+function! FirefoxPreviewDisablePreviewOnSave()
     echo "Preview on save disabled."
     augroup FirefoxPreviewOnSave
         autocmd!
