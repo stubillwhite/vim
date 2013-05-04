@@ -197,6 +197,7 @@ set undofile                    " Allow undo history to persist between sessions
 syntax on                       " Syntax highlighting
 colorscheme white               " My color scheme
 TabStop 4                       " Default to 4 spaces per tabstop
+set path=.,,.\dependencies\**   " Search locally and in dependencies directory
 
 " Enable extended character sets
 set encoding=utf-8
@@ -293,9 +294,13 @@ endif
 
 set grepprg=findstr\ /s\ /n
 set grepformat=%f:%l:%m
-let g:SrchPattern='*.txt'
 
 function s:SearchForWord(wrd)
+    " Default to searching for the current file extension
+    if !exists("g:SrchPattern")
+        let g:SrchPattern='*.'.expand("%:e")
+    endif
+
     let g:SrchPattern=input('Pattern: ', g:SrchPattern)
     let cmd=':grep '.a:wrd.' '.g:SrchPattern
     silent execute cmd
@@ -305,6 +310,7 @@ command -nargs=1 Search call s:SearchForWord(<f-args>)
 " Other scripts                                                             {{{1
 " ==============================================================================
 
+" TODO - Deprecated, remove in favor of shell script
 silent execute 'source '.g:MyVimScripts.'/make-tags.vim'
 set tags=./tags,../tags,tags
 
