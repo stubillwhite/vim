@@ -63,7 +63,7 @@ Bundle 'mediawiki'
 
 ""
 " Old Clojure
-Bundle 'slimv.vim'    
+"Bundle 'slimv.vim'    
 "Bundle 'VimClojure'    
 
 
@@ -89,8 +89,8 @@ endfunction
 command -nargs=0 EditorConfigText call EditorConfigText()
 
 function TabStop(n)
-    execute 'set tabstop='.a:n
-    execute 'set shiftwidth='.a:n
+    silent execute 'set tabstop='.a:n
+    silent execute 'set shiftwidth='.a:n
 endfunction
 command -nargs=1 TabStop call TabStop(<f-args>)
 

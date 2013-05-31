@@ -15,3 +15,5 @@ command! -range=% -nargs=0 FormatXml <line1>,<line2>call s:FormatXml(<f-args>)
 
 vnoremap <Leader>f :FormatXml<CR>
 nnoremap <Leader>f :FormatXml<CR>
+
+silent execute ':AlignCtrl l=p1P0I'
