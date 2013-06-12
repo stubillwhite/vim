@@ -38,10 +38,10 @@ hi! link WarningMsg     ErrorMsg
 hi! link Todo           ErrorMsg
 hi! link Title          ErrorMsg
 hi! link WildMenu       Visual
+hi! link Directory      Keyword
 
 " highlight-groups
 hi Cursor       guifg=bg                guibg=fg                gui=NONE
-hi Directory    guifg=thistle           guibg=bg                gui=NONE
 
 hi DiffAdd      guifg=fg                guibg=aquamarine4       gui=NONE
 hi DiffChange   guifg=fg                guibg=royalblue4        gui=NONE
@@ -52,8 +52,8 @@ hi ErrorMsg     guifg=gray100           guibg=bg                gui=bold
 hi Folded       guifg=fg                guibg=darkslategray     gui=italic
 hi FoldColumn   guifg=fg                guibg=bg                gui=italic
 hi NonText      guifg=gray50            guibg=bg                gui=NONE
+hi SpecialKey   guifg=gray50            guibg=bg                gui=NONE
 hi Search       guifg=gray100           guibg=darkslategray     gui=NONE
-hi SpecialKey   guifg=LightGoldenrod1   guibg=bg                gui=NONE
 hi StatusLine   guifg=gray100           guibg=PaleTurquoise4    gui=bold
 hi StatusLineNC guifg=fg                guibg=gray30            gui=NONE
 hi Visual       guifg=fg                guibg=gray40            gui=NONE

@@ -6,10 +6,9 @@
 "  - Look at repeat.vim
 "  - Better XML completion
 "  - Sort out :compiler option
-"  - Sort out fuzzy finder and tag building for project files only
 "  - Better search functionality
 
-" Vundle                                                                    {{{1
+" Plugins                                                                   {{{1
 " ==============================================================================
 
 set nocompatible 
@@ -18,7 +17,11 @@ filetype off
 set runtimepath+=~/.vim/bundle/vundle/
 call vundle#rc()
 
-" Bundles                           {{{2
+" Set <Leader> to something easier to reach
+let mapleader=","               
+let g:mapleader="," 
+
+" Core                              {{{2
 " ======================================
 
 " Vundle (required)
@@ -27,23 +30,38 @@ Bundle 'gmarik/vundle'
 " Utility functions used by oher plugins (required)
 Bundle 'L9'           
 
-" SQL language
-Bundle 'sqlserver.vim'
+" Bundles                           {{{2
+" ======================================
+
+" Testing
+" ack               git://github.com/mileszs/ack.vim.git
+
+" Align data in columns
+Bundle 'Align'
+
+" Simple buffer navigation
+Bundle 'bufexplorer.zip'
+nmap <Leader>b :BufExplorer<CR>
 
 " Easy multi-language commenting 
 Bundle 'The-NERD-Commenter'
 
-" Adds surround text block
-Bundle 'surround.vim'
+" Easy file browsing
+Bundle 'The-NERD-tree'
+nmap <Leader>e :NERDTreeToggle<CR>
 
 " Visualise the undo graph
 Bundle 'Gundo'
+nnoremap <Leader>u :GundoToggle<CR>
+
+" SQL language
+Bundle 'sqlserver.vim'
+
+" Adds surround text block
+Bundle 'surround.vim'
 
 " Fuzzy search across buffers/files/tags/etc
 Bundle 'FuzzyFinder'  
-
-" Align data in columns
-Bundle 'Align'
 
 " Tag autocompletion
 " Bundle 'closetag.vim'
@@ -54,25 +72,16 @@ Bundle 'xml.vim'
 Bundle 'vim-orgmode'
 Bundle 'mediawiki'
 
-"" " Clojure
-"" Bundle 'tpope/vim-fireplace'
-"" "Bundle 'tpope/vim-classpath'
-"" Bundle 'guns/vim-clojure-static'
-"" " EMACS Slimv for Lisp editing
-"" Bundle 'paredit.vim'
-
-""
-" Old Clojure
-"Bundle 'slimv.vim'    
-"Bundle 'VimClojure'    
-
-
 " Enable filetype autodetection and indent
 filetype plugin indent on
 
 " Functions                                                                 {{{1
 " ==============================================================================
 
+" General Vim functions             {{{2
+" ======================================
+
+" Configure for code editing
 function EditorConfigCode()
     set textwidth=0
     set noautoindent
@@ -81,6 +90,7 @@ function EditorConfigCode()
 endfunction
 command -nargs=0 EditorConfigCode call EditorConfigCode()
 
+" Configure for text editing
 function EditorConfigText()
     set textwidth=80
     set autoindent
@@ -88,12 +98,15 @@ function EditorConfigText()
 endfunction
 command -nargs=0 EditorConfigText call EditorConfigText()
 
+" Set all the relevant tab options to the specified level
 function TabStop(n)
     silent execute 'set tabstop='.a:n
     silent execute 'set shiftwidth='.a:n
+    silent execute 'set softtabstop='.a:n
 endfunction
 command -nargs=1 TabStop call TabStop(<f-args>)
 
+" Maximise the window
 function MaximiseWindow()
     if has('unix')
         set lines=38 columns=125
@@ -104,12 +117,14 @@ function MaximiseWindow()
 endfunction
 command -nargs=0 Maximise call MaximiseWindow()
 
+" Create the specified directory if it doesn't exist
 function s:CreateDirectory(path)
    if !isdirectory(a:path)
       call mkdir(a:path, 'p')
   endif
 endfunction
 
+" Switch off diff mode for the current window
 function NoDiffThis()
     silent execute ':diffoff | set nowrap'
 endfunction
@@ -117,14 +132,6 @@ command -nargs=0 NoDiffThis call NoDiffThis(<f-args>)
 
 " Text functions                    {{{2
 " ======================================
-
-" Underline the current text
-function Underline(char)
-    let len = col("$") - 1
-    silent execute ":normal $a"
-    silent execute ":normal ".len."i".a:char
-endfunction
-command -nargs=1 Underline call Underline(<f-args>)
 
 " Convert MS Office fancy puctuation into AsCII
 function FixSmartPunctuation()
@@ -137,12 +144,16 @@ function FixSmartPunctuation()
 endfunction
 command -nargs=0 FixSmartPunctuation call FixSmartPunctuation(<f-args>)
 
-function GenerateGUIDs(count)
-    silent execute ':split'
-    silent execute ':ene'
-    silent execute ':read !"c:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin\Uuidgen.Exe" -n'.a:count
+" Strip trailing whitespace characters from the entire file or a range
+function s:StripTrailingWhitespace() range
+    let _s=@/
+    let l = line('.')
+    let c = col('.')
+    silent execute ':'.a:firstline.','a:lastline.'s/\s\+$//e'
+    let @/=_s
+    silent call cursor(l, c)
 endfunction
-command -nargs=+ GenerateGUIDs call GenerateGUIDs(<f-args>)
+command -range=% StripTrailingWhitespace <line1>,<line2> call s:StripTrailingWhitespace()
 
 " While I'm playing with fonts...
 "
@@ -182,22 +193,32 @@ set backup                      " Use backup files
 set hidden                      " Keep buffers open when not displayed
 set ruler                       " Show the file position
 set showcmd                     " Show incomplete commands
-set incsearch                   " Use incremental searching
-set hlsearch                    " Highlight search matches
+set showmode                    " Show the active mode
+set incsearch                   " Search incrementally
+set hlsearch                    " Search highlighting
 set history=1000                " Keep more history
-set visualbell                  " Don't beep, just flash
+set visualbell                  " No beep
 set expandtab                   " No tabs
-set nowrap                      " Don't wrap text when displaying
+set nowrap                      " No wrapping text
 set nojoinspaces                " Single-space when joining sentences
-set ignorecase                  " Case insensitive by default
+set title                       " Set the title of the terminal
+set ignorecase                  " Case insensitive by default...
+set smartcase                   " ...but case sensitive if term includes uppercase
 set scrolloff=2                 " Keep some context when scrolling vertically
 set sidescrolloff=2             " Keep some context when scrolling horizontally
-set timeoutlen=2000             " Timeout to press a key combination
+set nostartofline               " Keep horizontal cursor position when scrolling
+set formatoptions+=n            " Format respects numbered/bulleted lists
+set virtualedit=block           " Virtual edit in visual blocks only
+set timeoutlen=500              " Timeout to press a key combination
+set report=0                    " Always report changes
 set undofile                    " Allow undo history to persist between sessions
+set path=.,,.\dependencies\**   " Search path
+set tags=./tags,../tags,tags    " Default tags files
+set listchars=tab:>-,eol:$      " Unprintable characters to display
+TabStop 4                       " Default to 4 spaces per tabstop
+
 syntax on                       " Syntax highlighting
 colorscheme white               " My color scheme
-TabStop 4                       " Default to 4 spaces per tabstop
-set path=.,,.\dependencies\**   " Search locally and in dependencies directory
 
 " Enable extended character sets
 set encoding=utf-8
@@ -210,7 +231,8 @@ set guifontwide=NSimsun:h10
 set wildmenu                    " Display options when tab completing
 set wildmode=list:full          " List options but complete to full
 set wildignore=
-set wildignore=*.class,*.*~
+set wildignore=*.class,*.o,*.obj
+set wildignore+=.hg,.git,.svn
 
 " GUI options - strip off items to maximise screen size
 set guioptions-=m               " No menu
@@ -224,11 +246,6 @@ set guioptions-=b               " No bottom scrollbar
 " Misc options
 let g:netrw_altv=1              " Netrw vertical split puts cursor on the right
 let html_use_css=1              " TOhtml command should use CSS
-let mapleader=","               " Set <Leader> to something easier to reach
-
-" Swap ` and ' because ` functionality is more useful but the key is hard to reach
-nnoremap ' `
-nnoremap ` '
 
 " Standard plugin to allow % to match keywords as well as braces
 runtime macros/matchit.vim
@@ -240,6 +257,11 @@ silent execute ':set directory='.g:TmpDir.'/swap'
 call s:CreateDirectory(&undodir)
 call s:CreateDirectory(&backupdir)
 call s:CreateDirectory(&directory)
+
+" TODO Look at symlinks and windows
+" set nobackup                    " do not keep backups after close
+" set nowritebackup               " do not keep a backup while working
+" set noswapfile                  " don't keep swp files either
 
 " Error and make files
 set shellpipe=2>&1\ \|\ tee
@@ -256,9 +278,6 @@ autocmd
     \   exe "normal g`\"" |
     \ endif
 augroup END
-
-" Unless we reconfigure this for code editing, default to text editing mode
-silent execute 'call EditorConfigText()'
 
 " File comparison options
 set diffopt=filler,iwhite
@@ -307,16 +326,36 @@ function s:SearchForWord(wrd)
 endfunction
 command -nargs=1 Search call s:SearchForWord(<f-args>)
 
-" Other scripts                                                             {{{1
+" File types                                                                {{{1
 " ==============================================================================
 
-" TODO - Deprecated, remove in favor of shell script
-silent execute 'source '.g:MyVimScripts.'/make-tags.vim'
-set tags=./tags,../tags,tags
+au BufRead,BufNewFile *.md set filetype=markdown
 
 " Key mappings                                                              {{{1
 " ==============================================================================
 
-nnoremap <Leader>u :GundoToggle<CR>
+" Swap ` and ' because ` functionality is more useful but the key is hard to reach
+nnoremap ' `
+nnoremap ` '
+
+" Quick way to edit .vimrc
+nmap <Leader>v :e C:/Users/IBM_ADMIN/my_local_stuff/home/my_stuff/srcs/vim/vimrc.vim<CR>
+
+" [AccuRev] Diff current file with backed
 nnoremap <Leader>d :silent! !start accurev diff -b <c-R>%<CR>
+
+" Search for the word currently under the cursor
 nnoremap <C-K> :Search <C-R><C-W>
+
+" Show unprintable characters
+nmap <Leader>l :set list!<CR>
+
+" Strip trailing whitespace characters
+nnoremap <silent> <Leader>w :StripTrailingWhitespace<CR>
+vnoremap <silent> <Leader>w :StripTrailingWhitespace<CR>
+
+" Initial configuration                                                     {{{1
+" ==============================================================================
+
+" Unless we reconfigure for code editing, default to text editing mode
+silent execute 'call EditorConfigText()'
