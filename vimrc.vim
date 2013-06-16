@@ -43,6 +43,22 @@ Bundle 'Align'
 Bundle 'bufexplorer.zip'
 nmap <Leader>b :BufExplorer<CR>
 
+" Fuzzy file finder
+Bundle 'ctrlp.vim'
+let g:ctrlp_by_filename=1           " Default to file mode, not full path
+let g:ctrlp_clear_cache_on_exit=0   " Keep the cache across sessions
+nmap <Leader>p :CtrlP<CR>
+
+" Automatically close quotes, brackets, etc
+Bundle 'delimitMate.vim'
+
+" Colorschemes
+Bundle 'flazz/vim-colorschemes'
+
+" Visualise the undo graph
+Bundle 'Gundo'
+nnoremap <Leader>u :GundoToggle<CR>
+
 " Easy multi-language commenting 
 Bundle 'The-NERD-Commenter'
 
@@ -50,18 +66,19 @@ Bundle 'The-NERD-Commenter'
 Bundle 'The-NERD-tree'
 nmap <Leader>e :NERDTreeToggle<CR>
 
-" Visualise the undo graph
-Bundle 'Gundo'
-nnoremap <Leader>u :GundoToggle<CR>
+" Indentation-based text objects for Python
+Bundle 'vim-indent-object'
+
+
+
+"Bundle 'ragtag.vim'
+
 
 " SQL language
 Bundle 'sqlserver.vim'
 
 " Adds surround text block
 Bundle 'surround.vim'
-
-" Fuzzy search across buffers/files/tags/etc
-Bundle 'FuzzyFinder'  
 
 " Tag autocompletion
 " Bundle 'closetag.vim'
@@ -82,32 +99,32 @@ filetype plugin indent on
 " ======================================
 
 " Configure for code editing
-function EditorConfigCode()
+function s:EditorConfigCode()
     set textwidth=0
     set noautoindent
     set nosmarttab
     silent execute ':Maximise'
 endfunction
-command -nargs=0 EditorConfigCode call EditorConfigCode()
+command -nargs=0 EditorConfigCode call s:EditorConfigCode()
 
 " Configure for text editing
-function EditorConfigText()
+function s:EditorConfigText()
     set textwidth=80
     set autoindent
     set smarttab
 endfunction
-command -nargs=0 EditorConfigText call EditorConfigText()
+command -nargs=0 EditorConfigText call s:EditorConfigText()
 
 " Set all the relevant tab options to the specified level
-function TabStop(n)
+function s:TabStop(n)
     silent execute 'set tabstop='.a:n
     silent execute 'set shiftwidth='.a:n
     silent execute 'set softtabstop='.a:n
 endfunction
-command -nargs=1 TabStop call TabStop(<f-args>)
+command -nargs=1 TabStop call s:TabStop(<f-args>)
 
 " Maximise the window
-function MaximiseWindow()
+function s:MaximiseWindow()
     if has('unix')
         set lines=38 columns=125
     else
@@ -115,7 +132,7 @@ function MaximiseWindow()
         silent exec 'simalt ~x'
     endif
 endfunction
-command -nargs=0 Maximise call MaximiseWindow()
+command -nargs=0 Maximise call s:MaximiseWindow()
 
 " Create the specified directory if it doesn't exist
 function s:CreateDirectory(path)
@@ -125,16 +142,16 @@ function s:CreateDirectory(path)
 endfunction
 
 " Switch off diff mode for the current window
-function NoDiffThis()
+function s:NoDiffThis()
     silent execute ':diffoff | set nowrap'
 endfunction
-command -nargs=0 NoDiffThis call NoDiffThis(<f-args>)
+command -nargs=0 NoDiffThis call s:NoDiffThis(<f-args>)
 
 " Text functions                    {{{2
 " ======================================
 
-" Convert MS Office fancy puctuation into AsCII
-function FixSmartPunctuation()
+" Convert MS Office fancy puctuation into ASCII
+function s:FixSmartPunctuation()
     silent! %s/\%u0091/'/g
     silent! %s/\%u0092/'/g
     silent! %s/\%u0093/"/g
@@ -142,7 +159,7 @@ function FixSmartPunctuation()
     silent! %s/\%u2019/'/g
     silent! %s/\%u2026/.../g
 endfunction
-command -nargs=0 FixSmartPunctuation call FixSmartPunctuation(<f-args>)
+command -nargs=0 FixSmartPunctuation call s:FixSmartPunctuation(<f-args>)
 
 " Strip trailing whitespace characters from the entire file or a range
 function s:StripTrailingWhitespace() range
@@ -231,7 +248,7 @@ set guifontwide=NSimsun:h10
 set wildmenu                    " Display options when tab completing
 set wildmode=list:full          " List options but complete to full
 set wildignore=
-set wildignore=*.class,*.o,*.obj
+set wildignore+=*.class,*.obj,*.pyc        
 set wildignore+=.hg,.git,.svn
 
 " GUI options - strip off items to maximise screen size
@@ -271,12 +288,13 @@ silent execute 'set errorfile='.g:TmpDir.'/error_file.txt'
 
 " Autocmds
 augroup VimrcEditingAutocommands
-autocmd
-  " When editing a file, always jump to the last known cursor position
-  au BufReadPost *
-    \ if line("'\"") > 0 && line("'\"") <= line("$") |
-    \   exe "normal g`\"" |
-    \ endif
+
+    " When editing a file, always jump to the last known cursor position
+    au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g'\"" | endif
+
+    " Normalise splits when resizing
+    au VimResized * exe "normal! \<C-w>="
+
 augroup END
 
 " File comparison options
@@ -296,7 +314,7 @@ endif
 " Special configuration for a diff window
 function ConfigureGui()
     if &diff
-        silent execute 'call MaximiseWindow()'
+        silent execute ':Maximise'
         let cmd = 'set titlestring=Diff\ (' . expand("%:t") . ')'
         silent execute cmd
     endif
@@ -329,7 +347,13 @@ command -nargs=1 Search call s:SearchForWord(<f-args>)
 " File types                                                                {{{1
 " ==============================================================================
 
-au BufRead,BufNewFile *.md set filetype=markdown
+augroup VimrcFileTypeAutocommands
+
+    " Markdown
+    au BufRead,BufNewFile *.md setlocal filetype=markdown
+
+augroup END
+
 
 " Key mappings                                                              {{{1
 " ==============================================================================
@@ -358,4 +382,4 @@ vnoremap <silent> <Leader>w :StripTrailingWhitespace<CR>
 " ==============================================================================
 
 " Unless we reconfigure for code editing, default to text editing mode
-silent execute 'call EditorConfigText()'
+silent execute ':EditorConfigText'
