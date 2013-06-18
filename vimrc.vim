@@ -163,12 +163,11 @@ command -nargs=0 FixSmartPunctuation call s:FixSmartPunctuation(<f-args>)
 
 " Strip trailing whitespace characters from the entire file or a range
 function s:StripTrailingWhitespace() range
-    let _s=@/
-    let l = line('.')
-    let c = col('.')
+    let l:save_search=@/
+    let l:save_cursor = getpos('.')
     silent execute ':'.a:firstline.','a:lastline.'s/\s\+$//e'
-    let @/=_s
-    silent call cursor(l, c)
+    let @/=l:save_search
+    silent call setpos('.', l:save_cursor)
 endfunction
 command -range=% StripTrailingWhitespace <line1>,<line2> call s:StripTrailingWhitespace()
 
@@ -259,6 +258,7 @@ set guioptions-=R               " No right scrollbar on split
 set guioptions-=l               " No left scrollbar
 set guioptions-=L               " No left scrollbar on split
 set guioptions-=b               " No bottom scrollbar
+set guioptions+=c               " Use console dialogs rather than pop-up
 
 " Misc options
 let g:netrw_altv=1              " Netrw vertical split puts cursor on the right
@@ -358,6 +358,9 @@ augroup END
 " Key mappings                                                              {{{1
 " ==============================================================================
 
+" Use semi-colon as an alias for colon for easier access to Ex commands
+nnoremap ; :
+
 " Swap ` and ' because ` functionality is more useful but the key is hard to reach
 nnoremap ' `
 nnoremap ` '
@@ -383,3 +386,24 @@ vnoremap <silent> <Leader>w :StripTrailingWhitespace<CR>
 
 " Unless we reconfigure for code editing, default to text editing mode
 silent execute ':EditorConfigText'
+
+
+
+""" " autocmd that will set up the w:created variable
+""" autocmd VimEnter * autocmd WinEnter * let w:created=1
+""" 
+""" " Consider this one, since WinEnter doesn't fire on the first window created when Vim launches.
+""" " You'll need to set any options for the first window in your vimrc,
+""" " or in an earlier VimEnter autocmd if you include this
+""" autocmd VimEnter * let w:created=1
+""" 
+""" " Example of how to use w:created in an autocmd to initialize a window-local option
+""" autocmd WinEnter * if !exists('w:created') | setlocal nu | endif
+""" 
+""" If you want the autocmd for setting the w:created variable to be contained in a given augroup, use the optional group argument to the autocmd, for example:
+""" 
+""" augroup mygroup
+"""   au!
+"""   autocmd VimEnter * autocmd mygroup WinEnter * let w:created=1
+""" augroup END
+
