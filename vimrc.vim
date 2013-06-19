@@ -65,6 +65,7 @@ Bundle 'The-NERD-Commenter'
 " Easy file browsing
 Bundle 'The-NERD-tree'
 nmap <Leader>e :NERDTreeToggle<CR>
+nmap <Leader>E :NERDTreeFind<CR>
 
 " Indentation-based text objects for Python
 Bundle 'vim-indent-object'
