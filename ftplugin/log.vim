@@ -4,5 +4,4 @@ else
     let s:Sourced=1
 endif
 
-set suffixesadd=.clj
-set path=.,src/**,testsrc/**
+silent execute ':EditorConfigCode'

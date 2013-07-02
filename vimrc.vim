@@ -3,7 +3,8 @@
 " Stuff to sort out                                                         {{{1
 " ==============================================================================
 
-"  - Look at repeat.vim
+"  - Mapping of clashing shortcuts (<Leader>l, etc.)
+"  - Function to build tags
 "  - Better XML completion
 "  - Sort out :compiler option
 "  - Better search functionality
@@ -59,6 +60,14 @@ Bundle 'flazz/vim-colorschemes'
 Bundle 'Gundo'
 nnoremap <Leader>u :GundoToggle<CR>
 
+" Easy toggling of the location and quickfix windows
+Bundle 'milkypostman/vim-togglelist'
+nmap <script> <silent> <Leader>l :call ToggleLocationList()<CR>
+nmap <script> <silent> <Leader>q :call ToggleQuickfixList()<CR>
+
+" Smarter repeat functionality
+Bundle 'repeat.vim'
+
 " Easy multi-language commenting 
 Bundle 'The-NERD-Commenter'
 
@@ -67,13 +76,16 @@ Bundle 'The-NERD-tree'
 nmap <Leader>e :NERDTreeToggle<CR>
 nmap <Leader>E :NERDTreeFind<CR>
 
+" Incredibly useful text navigation and manipulation shortcuts
+Bundle 'unimpaired.vim'
+
 " Indentation-based text objects for Python
 Bundle 'vim-indent-object'
 
 
 
-"Bundle 'ragtag.vim'
 
+"Bundle 'ragtag.vim'
 
 " SQL language
 Bundle 'sqlserver.vim'
@@ -104,7 +116,7 @@ function s:EditorConfigCode()
     set textwidth=0
     set noautoindent
     set nosmarttab
-    silent execute ':Maximise'
+    silent execute 'Maximise'
 endfunction
 command -nargs=0 EditorConfigCode call s:EditorConfigCode()
 
@@ -144,7 +156,7 @@ endfunction
 
 " Switch off diff mode for the current window
 function s:NoDiffThis()
-    silent execute ':diffoff | set nowrap'
+    silent execute 'diffoff | set nowrap'
 endfunction
 command -nargs=0 NoDiffThis call s:NoDiffThis(<f-args>)
 
@@ -166,7 +178,7 @@ command -nargs=0 FixSmartPunctuation call s:FixSmartPunctuation(<f-args>)
 function s:StripTrailingWhitespace() range
     let l:save_search=@/
     let l:save_cursor = getpos('.')
-    silent execute ':'.a:firstline.','a:lastline.'s/\s\+$//e'
+    silent execute a:firstline.','a:lastline.'s/\s\+$//e'
     let @/=l:save_search
     silent call setpos('.', l:save_cursor)
 endfunction
@@ -246,9 +258,9 @@ set guifontwide=NSimsun:h10
 
 " Command / file completion
 set wildmenu                    " Display options when tab completing
-set wildmode=list:full          " List options but complete to full
+set wildmode=list:longest,full  " List options but complete to full
 set wildignore=
-set wildignore+=*.class,*.obj,*.pyc        
+set wildignore+=*.class,*.obj,*.pyc
 set wildignore+=.hg,.git,.svn
 
 " GUI options - strip off items to maximise screen size
@@ -269,9 +281,9 @@ let html_use_css=1              " TOhtml command should use CSS
 runtime macros/matchit.vim
 
 " Store Undo/Backup/Swap files in a temporary directory
-silent execute ':set undodir='.g:TmpDir.'/undo'
-silent execute ':set backupdir='.g:TmpDir.'/backup'
-silent execute ':set directory='.g:TmpDir.'/swap'
+silent execute 'set undodir='.g:TmpDir.'/undo'
+silent execute 'set backupdir='.g:TmpDir.'/backup'
+silent execute 'set directory='.g:TmpDir.'/swap'
 call s:CreateDirectory(&undodir)
 call s:CreateDirectory(&backupdir)
 call s:CreateDirectory(&directory)
@@ -315,7 +327,7 @@ endif
 " Special configuration for a diff window
 function ConfigureGui()
     if &diff
-        silent execute ':Maximise'
+        silent execute 'Maximise'
         let cmd = 'set titlestring=Diff\ (' . expand("%:t") . ')'
         silent execute cmd
     endif
@@ -340,7 +352,7 @@ function s:SearchForWord(wrd)
     endif
 
     let g:SrchPattern=input('Pattern: ', g:SrchPattern)
-    let cmd=':grep '.a:wrd.' '.g:SrchPattern
+    let cmd='grep '.a:wrd.' '.g:SrchPattern
     silent execute cmd
 endfunction
 command -nargs=1 Search call s:SearchForWord(<f-args>)
@@ -350,8 +362,8 @@ command -nargs=1 Search call s:SearchForWord(<f-args>)
 
 augroup VimrcFileTypeAutocommands
 
-    " Markdown
-    au BufRead,BufNewFile *.md setlocal filetype=markdown
+    au BufRead,BufNewFile *.md  setlocal filetype=markdown
+    au BufRead,BufNewFile *.log setlocal filetype=log
 
 augroup END
 
@@ -359,8 +371,15 @@ augroup END
 " Key mappings                                                              {{{1
 " ==============================================================================
 
-" Use semi-colon as an alias for colon for easier access to Ex commands
+" <Space> in normal mode removes highlighted search
+nnoremap <Space> :nohlsearch<Return>
+
+" Use semi-colon as an alias for colon for easier access to Ex commands. Unmap
+" colon to force your fingers to use it.
 nnoremap ; :
+vnoremap ; :
+"nnoremap : <Nop>
+"vnoremap : <Nop>
 
 " Swap ` and ' because ` functionality is more useful but the key is hard to reach
 nnoremap ' `
@@ -376,17 +395,17 @@ nnoremap <Leader>d :silent! !start accurev diff -b <c-R>%<CR>
 nnoremap <C-K> :Search <C-R><C-W>
 
 " Show unprintable characters
-nmap <Leader>l :set list!<CR>
+nmap <Leader>w :set list!<CR>
 
 " Strip trailing whitespace characters
-nnoremap <silent> <Leader>w :StripTrailingWhitespace<CR>
-vnoremap <silent> <Leader>w :StripTrailingWhitespace<CR>
+nnoremap <silent> <Leader>W :StripTrailingWhitespace<CR>
+vnoremap <silent> <Leader>W :StripTrailingWhitespace<CR>
 
 " Initial configuration                                                     {{{1
 " ==============================================================================
 
 " Unless we reconfigure for code editing, default to text editing mode
-silent execute ':EditorConfigText'
+silent execute 'EditorConfigText'
 
 
 
