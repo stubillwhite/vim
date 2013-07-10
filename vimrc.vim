@@ -94,8 +94,6 @@ Bundle 'sqlserver.vim'
 Bundle 'surround.vim'
 
 " Tag autocompletion
-" Bundle 'closetag.vim'
-" Bundle 'HTML-AutoCloseTag'
 Bundle 'xml.vim'
 
 " Experimental
@@ -184,8 +182,19 @@ function s:StripTrailingWhitespace() range
 endfunction
 command -range=% StripTrailingWhitespace <line1>,<line2> call s:StripTrailingWhitespace()
 
-" While I'm playing with fonts...
-"
+" Navigation functions              {{{2
+" ======================================
+
+function s:MakeTags()
+    silent execute 'cd ..'
+    silent execute '!make-tags.bat'
+    silent execute 'cd -'
+endfunction
+command -nargs=0 MakeTags call s:MakeTags()
+
+" Font functions                    {{{2
+" ======================================
+
 function FontLucida()
     silent execute 'set guifont=Lucida_Console:h10:cDEFAULT'
 endfunction
@@ -400,6 +409,10 @@ nmap <Leader>w :set list!<CR>
 " Strip trailing whitespace characters
 nnoremap <silent> <Leader>W :StripTrailingWhitespace<CR>
 vnoremap <silent> <Leader>W :StripTrailingWhitespace<CR>
+
+" Force back-slashes to forward-slashes, and vice versa
+vnoremap <silent> <Leader>/ :s/\\/\//g<CR>
+vnoremap <silent> <Leader>\ :s/\//\\/g<CR>
 
 " Initial configuration                                                     {{{1
 " ==============================================================================
