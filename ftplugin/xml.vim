@@ -17,3 +17,9 @@ vnoremap <Leader>f :FormatXml<CR>
 nnoremap <Leader>f :FormatXml<CR>
 
 silent execute 'AlignCtrl l=p1P0I'
+
+" Enable folding but turn it off on entry to the file
+let g:xml_syntax_folding=1
+set foldmethod=syntax
+set foldlevel=1
+set nofoldenable

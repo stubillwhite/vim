@@ -3,11 +3,29 @@
 " Stuff to sort out                                                         {{{1
 " ==============================================================================
 
-"  - Mapping of clashing shortcuts (<Leader>l, etc.)
-"  - Function to build tags
-"  - Better XML completion
 "  - Sort out :compiler option
 "  - Better search functionality
+"  - Fix window maximisation
+"     - Should be a no-op if already maximised
+"     - Should be tied to GUI enter autocommand
+
+" Prerequisites                                                             {{{1
+" ==============================================================================
+
+" Paths
+if has('unix')
+    let g:Home='~'
+else
+    let g:Home='c:/users/IBM_ADMIN/my_local_stuff/home'
+endif
+let g:TmpDir=g:Home.'/.vimtmp'
+let g:MyVimScripts=g:Home.'/my_stuff/srcs/vim'
+
+function SourceScript(fnam)
+    let l:cmd='source '.g:MyVimScripts.'/'.a:fnam
+    silent execute l:cmd
+endfunction
+command -nargs=1 SourceScript call SourceScript(<args>)
 
 " Plugins                                                                   {{{1
 " ==============================================================================
@@ -33,6 +51,19 @@ Bundle 'L9'
 
 " Bundles                           {{{2
 " ======================================
+let g:Use_Powerline=0
+if g:Use_Powerline
+    Bundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+    set rtp+=C:\Users\IBM_ADMIN\.vim\bundle\powerline\powerline\bindings\vim
+    set t_Co=256
+    let g:Powerline_symbols='fancy'
+    "let g:Powerline_symbols = 'compatible'
+    set guifont=Ubuntu_Mono_derivative_Powerlin:h12:cANSI
+    set guifont=Liberation_Mono_for_Powerline:h10:cANSI
+    set laststatus=2
+else
+    set guifont=Lucida_Console:h10:cDEFAULT
+endif
 
 " Testing
 " ack               git://github.com/mileszs/ack.vim.git
@@ -81,6 +112,15 @@ Bundle 'unimpaired.vim'
 
 " Indentation-based text objects for Python
 Bundle 'vim-indent-object'
+
+" Python support
+Bundle 'davidhalter/jedi-vim'
+let g:jedi#auto_close_doc=0
+let g:jedi#use_tabs_not_buffers=0
+let g:jedi#use_splits_not_buffers="bottom"
+
+" Use tab for completion
+Bundle 'SuperTab'
 
 
 
@@ -213,15 +253,6 @@ command -nargs=* FontAnonymous call FontAnonymous(<f-args>)
 " Settings                                                                  {{{1
 " ==============================================================================
 
-" Paths
-if has('unix')
-    let g:Home='~'
-else
-    let g:Home='c:/users/IBM_ADMIN/my_local_stuff/home'
-endif
-let g:TmpDir=g:Home.'/.vimtmp'
-let g:MyVimScripts=g:Home.'/my_stuff/srcs/vim'
-
 " Default to Vim mode, and Windows behaviour
 set nocompatible
 source $VIMRUNTIME/mswin.vim
@@ -262,7 +293,7 @@ colorscheme white               " My color scheme
 set encoding=utf-8
 set fileencoding=utf-8
 set fileencodings=ucs-bom,utf8,prc
-set guifont=Lucida_Console:h10:cDEFAULT
+"set guifont=Lucida_Console:h10:cDEFAULT
 set guifontwide=NSimsun:h10
 
 " Command / file completion
@@ -317,6 +348,9 @@ augroup VimrcEditingAutocommands
     " Normalise splits when resizing
     au VimResized * exe "normal! \<C-w>="
 
+    " Syntax highlight from the start for better accuracy
+    au BufEnter * :syntax sync fromstart
+
 augroup END
 
 " File comparison options
@@ -342,11 +376,6 @@ function ConfigureGui()
     endif
 endfunction
 autocmd GUIEnter * call ConfigureGui()
-
-" If we're not running on Unix then disable Unix EOL recognition
-if !has('unix')
-    set fileformats-=unix
-endif
 
 " Search                                                                    {{{1
 " ==============================================================================
@@ -375,7 +404,6 @@ augroup VimrcFileTypeAutocommands
     au BufRead,BufNewFile *.log setlocal filetype=log
 
 augroup END
-
 
 " Key mappings                                                              {{{1
 " ==============================================================================
@@ -411,8 +439,8 @@ nnoremap <silent> <Leader>W :StripTrailingWhitespace<CR>
 vnoremap <silent> <Leader>W :StripTrailingWhitespace<CR>
 
 " Force back-slashes to forward-slashes, and vice versa
-vnoremap <silent> <Leader>/ :s/\\/\//g<CR>
-vnoremap <silent> <Leader>\ :s/\//\\/g<CR>
+vnoremap <silent> <Leader>/ :s/\\/\//g<CR>:nohlsearch<CR>
+vnoremap <silent> <Leader>\ :s/\//\\/g<CR>:nohlsearch<CR>
 
 " Initial configuration                                                     {{{1
 " ==============================================================================

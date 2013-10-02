@@ -49,8 +49,8 @@ hi DiffDelete   guifg=fg                guibg=indianred4        gui=NONE
 hi DiffText     guifg=fg                guibg=royalblue3        gui=NONE
 
 hi ErrorMsg     guifg=gray100           guibg=bg                gui=bold
-hi Folded       guifg=fg                guibg=darkslategray     gui=italic
-hi FoldColumn   guifg=fg                guibg=bg                gui=italic
+hi Folded       guifg=gray60            guibg=gray15            gui=italic
+hi FoldColumn   guifg=gray60            guibg=bg                gui=italic
 hi NonText      guifg=gray50            guibg=bg                gui=NONE
 hi SpecialKey   guifg=gray50            guibg=bg                gui=NONE
 hi Search       guifg=gray100           guibg=darkslategray     gui=NONE
