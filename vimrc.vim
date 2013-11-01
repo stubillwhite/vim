@@ -104,6 +104,8 @@ Bundle 'The-NERD-Commenter'
 
 " Easy file browsing
 Bundle 'The-NERD-tree'
+let NERDTreeQuitOnOpen=1
+let NERDTreeShowHidden=0
 nmap <Leader>e :NERDTreeToggle<CR>
 nmap <Leader>E :NERDTreeFind<CR>
 
@@ -122,11 +124,6 @@ let g:jedi#use_splits_not_buffers="bottom"
 " Use tab for completion
 Bundle 'SuperTab'
 
-
-
-
-"Bundle 'ragtag.vim'
-
 " SQL language
 Bundle 'sqlserver.vim'
 
@@ -136,9 +133,13 @@ Bundle 'surround.vim'
 " Tag autocompletion
 Bundle 'xml.vim'
 
-" Experimental
+" Org-mode
 Bundle 'vim-orgmode'
-Bundle 'mediawiki'
+Bundle 'speeddating.vim'
+
+" Experimental
+"Bundle 'ragtag.vim'
+
 
 " Enable filetype autodetection and indent
 filetype plugin indent on
@@ -409,7 +410,7 @@ augroup END
 " ==============================================================================
 
 " <Space> in normal mode removes highlighted search
-nnoremap <Space> :nohlsearch<Return>
+nnoremap <Space> :nohlsearch<Return>:echo "Search highlight off"<Return>
 
 " Use semi-colon as an alias for colon for easier access to Ex commands. Unmap
 " colon to force your fingers to use it.
@@ -441,6 +442,9 @@ vnoremap <silent> <Leader>W :StripTrailingWhitespace<CR>
 " Force back-slashes to forward-slashes, and vice versa
 vnoremap <silent> <Leader>/ :s/\\/\//g<CR>:nohlsearch<CR>
 vnoremap <silent> <Leader>\ :s/\//\\/g<CR>:nohlsearch<CR>
+
+" Map insert mode CTRL-Backspace to delete the previous word
+imap <C-BS> <C-W>
 
 " Initial configuration                                                     {{{1
 " ==============================================================================

@@ -7,6 +7,7 @@ endif
 
 augroup filetypedetect
   au! BufRead,BufNewFile *.sql          setfiletype sqlserver
+  au! BufRead,BufNewFile *.db2          setfiletype sqlserver
   au! BufRead,BufNewFile *.json         setfiletype javascript
   au! BufRead,BufNewFile *.ccsbmuproj   setfiletype xml
   au! BufRead,BufNewFile *.xml.template setfiletype xml
