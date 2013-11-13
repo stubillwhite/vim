@@ -75,10 +75,11 @@ Bundle 'Align'
 Bundle 'bufexplorer.zip'
 nmap <Leader>b :BufExplorer<CR>
 
-" Fuzzy file finder
+" File locator
 Bundle 'ctrlp.vim'
 let g:ctrlp_by_filename=1           " Default to file mode, not full path
 let g:ctrlp_clear_cache_on_exit=0   " Keep the cache across sessions
+let g:ctrlp_custom_ignore='.*\.beforejunction$'
 nmap <Leader>p :CtrlP<CR>
 
 " Automatically close quotes, brackets, etc
@@ -202,7 +203,7 @@ command -nargs=0 NoDiffThis call s:NoDiffThis(<f-args>)
 " Text functions                    {{{2
 " ======================================
 
-" Convert MS Office fancy puctuation into ASCII
+" Convert MS Office fancy punctuation into ASCII
 function s:FixSmartPunctuation()
     silent! %s/\%u0091/'/g
     silent! %s/\%u0092/'/g
@@ -294,15 +295,16 @@ colorscheme white               " My color scheme
 set encoding=utf-8
 set fileencoding=utf-8
 set fileencodings=ucs-bom,utf8,prc
-"set guifont=Lucida_Console:h10:cDEFAULT
 set guifontwide=NSimsun:h10
 
 " Command / file completion
+set noshellslash                " Backslashes for filenames for ZIP plugin
 set wildmenu                    " Display options when tab completing
 set wildmode=list:longest,full  " List options but complete to full
 set wildignore=
 set wildignore+=*.class,*.obj,*.pyc
-set wildignore+=.hg,.git,.svn
+set wildignore+=*/.hg/*,*/.git/*,*/.svn/*
+set wildignore+=*/bld/*,*/bin/*
 
 " GUI options - strip off items to maximise screen size
 set guioptions-=m               " No menu
@@ -338,7 +340,6 @@ call s:CreateDirectory(&directory)
 set shellpipe=2>&1\ \|\ tee
 silent execute 'set errorfile='.g:TmpDir.'/error_file.txt'
 silent execute 'set makeef='.g:TmpDir.'/make_error_file.txt'
-silent execute 'set errorfile='.g:TmpDir.'/error_file.txt'
 
 " Autocmds
 augroup VimrcEditingAutocommands
@@ -424,7 +425,10 @@ nnoremap ' `
 nnoremap ` '
 
 " Quick way to edit .vimrc
-nmap <Leader>v :e C:/Users/IBM_ADMIN/my_local_stuff/home/my_stuff/srcs/vim/vimrc.vim<CR>
+nmap <Leader>v :e C:/Users/IBM_ADMIN/my_local_stuff/home/my_stuff/srcs/vim/vimrc.vim<CR><CR>
+
+" Quick way to edit AccuRev notes
+nmap <Leader>a :e C:/Users/IBM_ADMIN/my_local_stuff/home/accurev.txt<CR><CR>
 
 " [AccuRev] Diff current file with backed
 nnoremap <Leader>d :silent! !start accurev diff -b <c-R>%<CR>
