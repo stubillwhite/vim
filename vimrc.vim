@@ -74,6 +74,7 @@ Bundle 'Align'
 " Simple buffer navigation
 Bundle 'bufexplorer.zip'
 nmap <Leader>b :BufExplorer<CR>
+let g:bufExplorerSortBy='name'      " Default sort by the name
 
 " File locator
 Bundle 'ctrlp.vim'
@@ -402,8 +403,8 @@ command -nargs=1 Search call s:SearchForWord(<f-args>)
 
 augroup VimrcFileTypeAutocommands
 
-    au BufRead,BufNewFile *.md  setlocal filetype=markdown
-    au BufRead,BufNewFile *.log setlocal filetype=log
+    au BufRead,BufNewFile *.md         setlocal filetype=markdown
+    au BufRead,BufNewFile *.log        setlocal filetype=log
 
 augroup END
 
