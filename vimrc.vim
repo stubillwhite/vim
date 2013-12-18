@@ -3,8 +3,6 @@
 " Stuff to sort out                                                         {{{1
 " ==============================================================================
 
-"  - Sort out :compiler option
-"  - Better search functionality
 "  - Fix window maximisation
 "     - Should be a no-op if already maximised
 "     - Should be tied to GUI enter autocommand
@@ -306,6 +304,7 @@ set wildignore=
 set wildignore+=*.class,*.obj,*.pyc
 set wildignore+=*/.hg/*,*/.git/*,*/.svn/*
 set wildignore+=*/bld/*,*/bin/*
+set wildignore+=*/*.beforejunction/*
 
 " GUI options - strip off items to maximise screen size
 set guioptions-=m               " No menu
@@ -386,17 +385,18 @@ autocmd GUIEnter * call ConfigureGui()
 set grepprg=findstr\ /s\ /n
 set grepformat=%f:%l:%m
 
-function s:SearchForWord(wrd)
-    " Default to searching for the current file extension
-    if !exists("g:SrchPattern")
-        let g:SrchPattern='*.'.expand("%:e")
-    endif
-
-    let g:SrchPattern=input('Pattern: ', g:SrchPattern)
-    let cmd='grep '.a:wrd.' '.g:SrchPattern
-    silent execute cmd
+function s:SearchInteractive(wrd)
+    let SearchCmd=':vimgrep /'.a:wrd.'/j **/*.'.expand("%:e")
+    call feedkeys(SearchCmd)
 endfunction
-command -nargs=1 Search call s:SearchForWord(<f-args>)
+command -nargs=1 SearchInteractive call s:SearchInteractive(<f-args>)
+
+function s:SearchImmediate(wrd)
+    let SearchCmd=':vimgrep /'.a:wrd.'/j **/*.'.expand("%:e")
+    call feedkeys(SearchCmd)
+    call feedkeys("\<CR>")
+endfunction
+command -nargs=1 SearchImmediate call s:SearchImmediate(<f-args>)
 
 " File types                                                                {{{1
 " ==============================================================================
@@ -435,7 +435,9 @@ nmap <Leader>a :e C:/Users/IBM_ADMIN/my_local_stuff/home/accurev.txt<CR><CR>
 nnoremap <Leader>d :silent! !start accurev diff -b <c-R>%<CR>
 
 " Search for the word currently under the cursor
-nnoremap <C-K> :Search <C-R><C-W>
+" CTRL-K immediate, ALT-K interactive
+nnoremap <C-K> :SearchImmediate <C-R><C-W><CR>
+nnoremap ë     :SearchInteractive <C-R><C-W><CR>
 
 " Show unprintable characters
 nmap <Leader>w :set list!<CR>
