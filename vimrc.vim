@@ -1,12 +1,5 @@
 " vim:fdm=marker
 
-" Stuff to sort out                                                         {{{1
-" ==============================================================================
-
-"  - Fix window maximisation
-"     - Should be a no-op if already maximised
-"     - Should be tied to GUI enter autocommand
-
 " Prerequisites                                                             {{{1
 " ==============================================================================
 
@@ -175,16 +168,26 @@ function s:TabStop(n)
 endfunction
 command -nargs=1 TabStop call s:TabStop(<f-args>)
 
-" Maximise the window
-function s:MaximiseWindow()
-    if has('unix')
-        set lines=38 columns=125
-    else
-        " Alt-space x to maximise the window
-        silent exec 'simalt ~x'
+" Resize the window to maximum
+function s:ResizeWindowToMaximum()
+    if !exists('&g:WindowMaximised')
+        if has('unix')
+            set lines=38 columns=125
+        else
+            " Alt-space x to maximise the window
+            silent exec 'simalt ~x'
+        endif
+        let g:WindowMaximised=1
     endif
 endfunction
-command -nargs=0 Maximise call s:MaximiseWindow()
+
+" Ensure that the window is maximised when the GUI starts
+function s:MaximiseWindow()
+    augroup WindowSizeControl
+        autocmd BufEnter     * :call s:ResizeWindowToMaximum()
+    augroup end
+endfunction
+command -nargs=0 MaximiseWindow call s:MaximiseWindow()
 
 " Create the specified directory if it doesn't exist
 function s:CreateDirectory(path)
