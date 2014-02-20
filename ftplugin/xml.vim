@@ -18,8 +18,8 @@ nnoremap <Leader>f :FormatXml<CR>
 
 silent execute 'AlignCtrl l=p1P0I'
 
-" Tabs for XML files
-set noexpandtab
+" Spaces for XML files
+set expandtab
 
 " TODO -- Stick this in a function
 "" Enable folding but turn it off on entry to the file

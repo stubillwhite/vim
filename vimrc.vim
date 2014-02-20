@@ -56,9 +56,6 @@ else
     set guifont=Lucida_Console:h10:cDEFAULT
 endif
 
-" Testing
-" ack               git://github.com/mileszs/ack.vim.git
-
 " Align data in columns
 Bundle 'Align'
 
@@ -130,10 +127,6 @@ Bundle 'xml.vim'
 Bundle 'vim-orgmode'
 Bundle 'speeddating.vim'
 
-" Experimental
-"Bundle 'ragtag.vim'
-
-
 " Enable filetype autodetection and indent
 filetype plugin indent on
 
@@ -168,9 +161,9 @@ function s:TabStop(n)
 endfunction
 command -nargs=1 TabStop call s:TabStop(<f-args>)
 
-" Resize the window to maximum
+" Maximise the window
 function s:ResizeWindowToMaximum()
-    if !exists('&g:WindowMaximised')
+    if !exists('g:WindowMaximised')
         if has('unix')
             set lines=38 columns=125
         else
@@ -181,13 +174,22 @@ function s:ResizeWindowToMaximum()
     endif
 endfunction
 
+" Track when the GUI has started
+augroup WindowSizeControl
+    autocmd GUIEnter * let s:GUIStarted=1
+augroup end
+
 " Ensure that the window is maximised when the GUI starts
-function s:MaximiseWindow()
-    augroup WindowSizeControl
-        autocmd BufEnter     * :call s:ResizeWindowToMaximum()
-    augroup end
+function s:EnsureWindowIsMaximised()
+    if !exists('s:WindowMaximised')
+        if !exists('s:GUIStarted')
+            call s:ResizeWindowToMaximum()
+        else
+            autocmd BufEnter * :call s:ResizeWindowToMaximum()
+        endif
+    endif
 endfunction
-command -nargs=0 MaximiseWindow call s:MaximiseWindow()
+command -nargs=0 MaximiseWindow call s:EnsureWindowIsMaximised()
 
 " Create the specified directory if it doesn't exist
 function s:CreateDirectory(path)
@@ -205,13 +207,16 @@ command -nargs=0 NoDiffThis call s:NoDiffThis(<f-args>)
 " Text functions                    {{{2
 " ======================================
 
-" Convert MS Office fancy punctuation into ASCII
+" Convert fancy punctuation back into ASCII
 function s:FixSmartPunctuation()
     silent! %s/\%u0091/'/g
     silent! %s/\%u0092/'/g
     silent! %s/\%u0093/"/g
     silent! %s/\%u0094/"/g
+    silent! %s/\%u2014/--/g
     silent! %s/\%u2019/'/g
+    silent! %s/\%u201C/"/g
+    silent! %s/\%u201D/"/g
     silent! %s/\%u2026/.../g
 endfunction
 command -nargs=0 FixSmartPunctuation call s:FixSmartPunctuation(<f-args>)
@@ -254,6 +259,11 @@ function FontAnonymous()
 endfunction
 command -nargs=* FontAnonymous call FontAnonymous(<f-args>)
 
+function FontMeslo()
+    silent execute 'set guifont=Meslo_LG_S:h10:cANSI'
+endfunction
+command -nargs=* FontMeslo call FontMeslo(<f-args>)
+"
 " Settings                                                                  {{{1
 " ==============================================================================
 
@@ -265,6 +275,7 @@ source $VIMRUNTIME/mswin.vim
 set backup                      " Use backup files
 set hidden                      " Keep buffers open when not displayed
 set ruler                       " Show the file position
+set copyindent                  " Copy indentation characters
 set showcmd                     " Show incomplete commands
 set showmode                    " Show the active mode
 set incsearch                   " Search incrementally
@@ -390,7 +401,7 @@ set grepformat=%f:%l:%m
 
 function s:SearchInteractive(wrd)
     let SearchCmd=':vimgrep /'.a:wrd.'/j **/*.'.expand("%:e")
-    call feedkeys(SearchCmd)
+    call feedkeys(SearchCmd."\<HOME>\<RIGHT>\<RIGHT>\<RIGHT>\<RIGHT>\<RIGHT>\<RIGHT>\<RIGHT>\<RIGHT>\<RIGHT>")
 endfunction
 command -nargs=1 SearchInteractive call s:SearchInteractive(<f-args>)
 
@@ -406,8 +417,8 @@ command -nargs=1 SearchImmediate call s:SearchImmediate(<f-args>)
 
 augroup VimrcFileTypeAutocommands
 
-    au BufRead,BufNewFile *.md         setlocal filetype=markdown
-    au BufRead,BufNewFile *.log        setlocal filetype=log
+    au BufRead,BufNewFile *.md                          setlocal filetype=markdown
+    au BufRead,BufNewFile *.log                         setlocal filetype=log
 
 augroup END
 
@@ -421,12 +432,14 @@ nnoremap <Space> :nohlsearch<Return>:echo "Search highlight off"<Return>
 " colon to force your fingers to use it.
 nnoremap ; :
 vnoremap ; :
-"nnoremap : <Nop>
-"vnoremap : <Nop>
 
 " Swap ` and ' because ` functionality is more useful but the key is hard to reach
 nnoremap ' `
 nnoremap ` '
+
+" Navigate wrapped lines more easily
+nnoremap j gj
+nnoremap k gk
 
 " Quick way to edit .vimrc
 nmap <Leader>v :e C:/Users/IBM_ADMIN/my_local_stuff/home/my_stuff/srcs/vim/vimrc.vim<CR><CR>
@@ -434,13 +447,23 @@ nmap <Leader>v :e C:/Users/IBM_ADMIN/my_local_stuff/home/my_stuff/srcs/vim/vimrc
 " Quick way to edit AccuRev notes
 nmap <Leader>a :e C:/Users/IBM_ADMIN/my_local_stuff/home/accurev.txt<CR><CR>
 
-" [AccuRev] Diff current file with backed
+" AccuRev diff current file with backed
 nnoremap <Leader>d :silent! !start accurev diff -b <c-R>%<CR>
 
-" Search for the word currently under the cursor
-" CTRL-K immediate, ALT-K interactive
-nnoremap <C-K> :SearchImmediate <C-R><C-W><CR>
-nnoremap ë     :SearchInteractive <C-R><C-W><CR>
+" Fast window navigation
+map <S-LEFT> <C-w>h
+map <S-DOWN> <C-w>j
+map <S-UP> <C-w>k
+map <S-RIGHT> <C-w>l
+
+" Use standard regexes for search, not Vim regexes
+nnoremap / /\v
+vnoremap / /\v
+
+" Grep for the word currently under the cursor
+" CTRL-G immediate, ALT-G interactive
+nnoremap <C-G> :SearchImmediate <C-R><C-W><CR>
+nnoremap ç     :SearchInteractive <C-R><C-W><CR>
 
 " Show unprintable characters
 nmap <Leader>w :set list!<CR>
@@ -461,24 +484,3 @@ imap <C-BS> <C-W>
 
 " Unless we reconfigure for code editing, default to text editing mode
 silent execute 'EditorConfigText'
-
-
-
-""" " autocmd that will set up the w:created variable
-""" autocmd VimEnter * autocmd WinEnter * let w:created=1
-""" 
-""" " Consider this one, since WinEnter doesn't fire on the first window created when Vim launches.
-""" " You'll need to set any options for the first window in your vimrc,
-""" " or in an earlier VimEnter autocmd if you include this
-""" autocmd VimEnter * let w:created=1
-""" 
-""" " Example of how to use w:created in an autocmd to initialize a window-local option
-""" autocmd WinEnter * if !exists('w:created') | setlocal nu | endif
-""" 
-""" If you want the autocmd for setting the w:created variable to be contained in a given augroup, use the optional group argument to the autocmd, for example:
-""" 
-""" augroup mygroup
-"""   au!
-"""   autocmd VimEnter * autocmd mygroup WinEnter * let w:created=1
-""" augroup END
-
