@@ -386,7 +386,7 @@ endif
 " Special configuration for a diff window
 function ConfigureGui()
     if &diff
-        silent execute 'Maximise'
+        silent execute 'MaximiseWindow'
         let cmd = 'set titlestring=Diff\ (' . expand("%:t") . ')'
         silent execute cmd
     endif
@@ -478,6 +478,18 @@ vnoremap <silent> <Leader>\ :s/\//\\/g<CR>:nohlsearch<CR>
 
 " Map insert mode CTRL-Backspace to delete the previous word
 imap <C-BS> <C-W>
+
+" VimTip #171 -- Search for visually selected text
+vnoremap <silent> * :<C-U>
+  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+  \gvy/<C-R><C-R>=substitute(
+  \escape(@", '/\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  \gV:call setreg('"', old_reg, old_regtype)<CR>
+vnoremap <silent> # :<C-U>
+  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+  \gvy?<C-R><C-R>=substitute(
+  \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  \gV:call setreg('"', old_reg, old_regtype)<CR>
 
 " Initial configuration                                                     {{{1
 " ==============================================================================
