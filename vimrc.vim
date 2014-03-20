@@ -74,6 +74,15 @@ nmap <Leader>p :CtrlP<CR>
 " Automatically close quotes, brackets, etc
 Bundle 'delimitMate.vim'
 
+" Automatically close function declarations for several languages
+Bundle 'endwise.vim'
+
+" Browse the Git commit log
+Bundle 'extradite.vim'
+
+" Git integration
+Bundle 'fugitive.vim'
+
 " Colorschemes
 Bundle 'flazz/vim-colorschemes'
 
@@ -126,6 +135,9 @@ Bundle 'xml.vim'
 " Org-mode
 Bundle 'vim-orgmode'
 Bundle 'speeddating.vim'
+
+" TODO
+"  - ack
 
 " Enable filetype autodetection and indent
 filetype plugin indent on
@@ -299,6 +311,7 @@ set undofile                    " Allow undo history to persist between sessions
 set path=.,,.\dependencies\**   " Search path
 set tags=./tags,../tags,tags    " Default tags files
 set listchars=tab:>-,eol:$      " Unprintable characters to display
+set formatoptions+=n            " Support numbered lists
 TabStop 4                       " Default to 4 spaces per tabstop
 
 syntax on                       " Syntax highlighting

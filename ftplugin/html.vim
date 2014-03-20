@@ -1,3 +1,5 @@
+silent execute ':EditorConfigCode'
+
 if exists('s:Sourced')
     finish
 else
