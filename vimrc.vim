@@ -153,7 +153,7 @@ function s:EditorConfigCode()
     set textwidth=0
     set noautoindent
     set nosmarttab
-    silent execute 'Maximise'
+    execute 'MaximiseWindow'
 endfunction
 command -nargs=0 EditorConfigCode call s:EditorConfigCode()
 
@@ -175,14 +175,14 @@ command -nargs=1 TabStop call s:TabStop(<f-args>)
 
 " Maximise the window
 function s:ResizeWindowToMaximum()
-    if !exists('g:WindowMaximised')
+    if !exists('s:WindowMaximised')
         if has('unix')
             set lines=38 columns=125
         else
             " Alt-space x to maximise the window
             silent exec 'simalt ~x'
         endif
-        let g:WindowMaximised=1
+        let s:WindowMaximised=1
     endif
 endfunction
 
@@ -194,7 +194,7 @@ augroup end
 " Ensure that the window is maximised when the GUI starts
 function s:EnsureWindowIsMaximised()
     if !exists('s:WindowMaximised')
-        if !exists('s:GUIStarted')
+        if exists('s:GUIStarted')
             call s:ResizeWindowToMaximum()
         else
             autocmd BufEnter * :call s:ResizeWindowToMaximum()
@@ -275,7 +275,12 @@ function FontMeslo()
     silent execute 'set guifont=Meslo_LG_S:h10:cANSI'
 endfunction
 command -nargs=* FontMeslo call FontMeslo(<f-args>)
-"
+
+function Spellcheck()
+    silent execute 'setlocal spell spelllang=en_us'
+endfunction
+command -nargs=* Spellcheck call Spellcheck(<f-args>)
+
 " Settings                                                                  {{{1
 " ==============================================================================
 
@@ -412,11 +417,11 @@ autocmd GUIEnter * call ConfigureGui()
 set grepprg=findstr\ /s\ /n
 set grepformat=%f:%l:%m
 
-function s:SearchInteractive(wrd)
-    let SearchCmd=':vimgrep /'.a:wrd.'/j **/*.'.expand("%:e")
+function s:SearchInteractive()
+    let SearchCmd=':vimgrep //j **/*.'.expand("%:e")
     call feedkeys(SearchCmd."\<HOME>\<RIGHT>\<RIGHT>\<RIGHT>\<RIGHT>\<RIGHT>\<RIGHT>\<RIGHT>\<RIGHT>\<RIGHT>")
 endfunction
-command -nargs=1 SearchInteractive call s:SearchInteractive(<f-args>)
+command -nargs=0 SearchInteractive call s:SearchInteractive(<f-args>)
 
 function s:SearchImmediate(wrd)
     let SearchCmd=':vimgrep /'.a:wrd.'/j **/*.'.expand("%:e")
@@ -476,7 +481,7 @@ vnoremap / /\v
 " Grep for the word currently under the cursor
 " CTRL-G immediate, ALT-G interactive
 nnoremap <C-G> :SearchImmediate <C-R><C-W><CR>
-nnoremap ç     :SearchInteractive <C-R><C-W><CR>
+nnoremap ç     :SearchInteractive <CR>
 
 " Show unprintable characters
 nmap <Leader>w :set list!<CR>
