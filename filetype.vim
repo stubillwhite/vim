@@ -12,4 +12,5 @@ augroup filetypedetect
   au! BufRead,BufNewFile *.ccsbmuproj   setfiletype xml
   au! BufRead,BufNewFile *.proj         setfiletype xml
   au! BufRead,BufNewFile *.xml.template setfiletype xml
+  au! BufNewFile,BufRead *.gradle       setfiletype groovy
 augroup END

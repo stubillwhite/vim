@@ -136,6 +136,10 @@ Bundle 'xml.vim'
 Bundle 'vim-orgmode'
 Bundle 'speeddating.vim'
 
+" Groovy
+Bundle 'groovy.vim'
+Bundle 'groovyindent'
+
 " TODO
 "  - ack
 
