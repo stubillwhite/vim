@@ -498,8 +498,9 @@ vnoremap <silent> <Leader>W :StripTrailingWhitespace<CR>
 vnoremap <silent> <Leader>/ :s/\\/\//g<CR>:nohlsearch<CR>
 vnoremap <silent> <Leader>\ :s/\//\\/g<CR>:nohlsearch<CR>
 
-" Map insert mode CTRL-Backspace to delete the previous word
+" Map insert mode and command-line mode CTRL-Backspace to delete the previous word
 imap <C-BS> <C-W>
+cmap <C-BS> <C-W>
 
 " VimTip #171 -- Search for visually selected text
 vnoremap <silent> * :<C-U>
