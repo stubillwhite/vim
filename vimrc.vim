@@ -73,6 +73,7 @@ nmap <Leader>p :CtrlP<CR>
 
 " Automatically close quotes, brackets, etc
 Bundle 'delimitMate.vim'
+let delimitMate_expand_cr = 1
 
 " Automatically close function declarations for several languages
 Bundle 'endwise.vim'
@@ -471,6 +472,10 @@ nmap <Leader>a :e C:/Users/IBM_ADMIN/my_local_stuff/home/accurev.txt<CR><CR>
 
 " AccuRev diff current file with backed
 nnoremap <Leader>d :silent! !start accurev diff -b <c-R>%<CR>
+
+" Copy-all to clipboard and paste-all from clipboard
+nnoremap <Leader>ac :%y+<CR>
+nnoremap <Leader>ap :%d_<CR>"+p
 
 " Fast window navigation
 map <S-LEFT> <C-w>h
