@@ -271,6 +271,11 @@ function FontInconsolata()
 endfunction
 command -nargs=* FontInconsolata call FontInconsolata(<f-args>)
 
+function FontDejaVuSansMono()
+    silent execute 'set guifont=DejaVu_Sans_Mono:h10:cANSI'
+endfunction
+command -nargs=* FontDejaVuSansMono call FontDejaVuSansMono(<f-args>)
+
 function FontAnonymous()
     silent execute 'set guifont=Anonymous_Pro:h12:cANSI'
 endfunction
@@ -475,7 +480,7 @@ nnoremap <Leader>d :silent! !start accurev diff -b <c-R>%<CR>
 
 " Copy-all to clipboard and paste-all from clipboard
 nnoremap <Leader>ac :%y+<CR>
-nnoremap <Leader>ap :%d_<CR>"+p
+nnoremap <Leader>ap :%d_<CR>"+pk"_dd
 
 " Fast window navigation
 map <S-LEFT> <C-w>h
