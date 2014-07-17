@@ -141,6 +141,9 @@ Bundle 'speeddating.vim'
 Bundle 'groovy.vim'
 Bundle 'groovyindent'
 
+" Scala
+Bundle 'derekwyatt/vim-scala'
+
 " TODO
 "  - ack
 
