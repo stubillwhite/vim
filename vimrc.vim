@@ -24,8 +24,8 @@ command -nargs=1 SourceScript call SourceScript(<args>)
 set nocompatible 
 filetype off     
 
-set runtimepath+=~/.vim/bundle/vundle/
-call vundle#rc()
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
 
 " Set <Leader> to something easier to reach
 let mapleader=","               
@@ -53,7 +53,11 @@ if g:Use_Powerline
     set guifont=Liberation_Mono_for_Powerline:h10:cANSI
     set laststatus=2
 else
-    set guifont=Lucida_Console:h10:cDEFAULT
+    if has('unix')
+        set guifont=Liberation\ Mono\ 10
+    else
+        set guifont=Lucida_Console:h10:cDEFAULT
+    endif
 endif
 
 " Align data in columns
@@ -147,6 +151,8 @@ Bundle 'derekwyatt/vim-scala'
 " TODO
 "  - ack
 
+call vundle#end()
+
 " Enable filetype autodetection and indent
 filetype plugin indent on
 
@@ -185,7 +191,7 @@ command -nargs=1 TabStop call s:TabStop(<f-args>)
 function s:ResizeWindowToMaximum()
     if !exists('s:WindowMaximised')
         if has('unix')
-            set lines=38 columns=125
+            set lines=999 columns=999
         else
             " Alt-space x to maximise the window
             silent exec 'simalt ~x'
