@@ -24,8 +24,14 @@ command -nargs=1 SourceScript call SourceScript(<args>)
 set nocompatible 
 filetype off     
 
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+if has('unix')
+    set rtp+=~/.vim/bundle/Vundle.vim
+    call vundle#begin()
+else
+    set rtp+=~/vimfiles/bundle/Vundle.vim/
+    let path='~/vimfiles/bundle'
+    call vundle#begin(path)
+endif
 
 " Set <Leader> to something easier to reach
 let mapleader=","               
