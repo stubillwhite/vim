@@ -269,6 +269,11 @@ function FontLucida()
 endfunction
 command -nargs=* FontLucida call FontLucida(<f-args>)
 
+function FontInconsolataDZ()
+    silent execute 'set guifont=Inconsolata-dz:h10:cANSI'
+endfunction
+command -nargs=* FontInconsolataDZ call FontInconsolataDZ(<f-args>)
+
 function FontInconsolata()
     silent execute 'set guifont=Inconsolata:h12:cANSI'
 endfunction
@@ -288,6 +293,11 @@ function FontMeslo()
     silent execute 'set guifont=Meslo_LG_S:h10:cANSI'
 endfunction
 command -nargs=* FontMeslo call FontMeslo(<f-args>)
+
+function FontInput()
+    silent execute 'set guifont=Input:h10:cANSI'
+endfunction
+command -nargs=* FontInput call FontInput(<f-args>)
 
 function Spellcheck()
     silent execute 'setlocal spell spelllang=en_us'
@@ -322,14 +332,15 @@ set scrolloff=2                 " Keep some context when scrolling vertically
 set sidescrolloff=2             " Keep some context when scrolling horizontally
 set nostartofline               " Keep horizontal cursor position when scrolling
 set formatoptions+=n            " Format respects numbered/bulleted lists
-set virtualedit=block           " Virtual edit in visual blocks only
+set virtualedit=                " No virtual edit
 set timeoutlen=500              " Timeout to press a key combination
 set report=0                    " Always report changes
 set undofile                    " Allow undo history to persist between sessions
 set path=.,,.\dependencies\**   " Search path
-set tags=./tags,../tags,tags    " Default tags files
+set tags=./tags,../../tags      " Default tags files
 set listchars=tab:>-,eol:$      " Unprintable characters to display
 set formatoptions+=n            " Support numbered lists
+set laststatus=2                " Always have a statusline
 TabStop 4                       " Default to 4 spaces per tabstop
 
 syntax on                       " Syntax highlighting
